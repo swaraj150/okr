@@ -1,12 +1,12 @@
 export default function App() {
   return (
     <>
-      <div className="flex w-full min-h-screen justify-center items-center border  font-mono ">
+      <div className="flex w-full min-h-screen justify-center items-center border  font-mono bg-gray-300 ">
         <div className={"absolute top-20  text-2xl font-bold"}>
             <p className={"font-bold text-5xl"}>OKR Form</p>
         </div>
         <form
-          className={"flex flex-col w-[400px] h-auto gap-5 p-10 border rounded-md"}
+          className={"flex flex-col w-[400px] h-auto gap-5 p-10 border rounded-md shadow-xl bg-gray-100"}
           onSubmit={() => {}}
         >
             
@@ -14,7 +14,7 @@ export default function App() {
             <label htmlFor="objective">Add an Objective</label>
             <input
               type="text"
-              className={" border rounded-md text-center border"}
+              className={" border rounded-md  border"}
               name="objective"
             />
           </div >
@@ -22,7 +22,7 @@ export default function App() {
             <label htmlFor="keyResult">Add a Key Result</label>
             <input
               type="text"
-              className={" border rounded-md text-center border"}
+              className={" border rounded-md  border"}
               name="keyResult"
             />
           </div>

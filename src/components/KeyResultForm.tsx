@@ -3,7 +3,7 @@ import type { KeyResult } from '../types/okr_types.ts';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultForm = () => {
-    const { setKeyResultList } = useContext(KeyResultContext);
+    const { addKeyResult } = useContext(KeyResultContext);
     const [keyResult, setKeyResult] = useState<KeyResult>({
         description: '',
         progress: 0,
@@ -31,6 +31,8 @@ const KeyResultForm = () => {
             />
             <input
                 type="number"
+                // inputMode={'numeric'}
+                // onInput={'this.value = this.value.replace(/\D+/g'}
                 className={'rounded-md border'}
                 id={'keyResult-Progress'}
                 name="progress"
@@ -50,10 +52,7 @@ const KeyResultForm = () => {
                 className={'border rounded-md px-3 py-1 bg-blue-500 text-white'}
                 type="button"
                 onClick={() => {
-                    setKeyResultList((keyResultList: KeyResult[]) => [
-                        ...keyResultList,
-                        keyResult,
-                    ]);
+                    addKeyResult(keyResult);
                 }}
                 disabled={isDisabled}
             >

@@ -1,4 +1,11 @@
-export default function App() {
+import React, { useState } from 'react';
+import KeyResultForm from './components/KeyResultForm.tsx';
+import type { KeyResult } from './types/okr_types.ts';
+import KeyResultList from './components/KeyResultList.tsx';
+
+export default function OkrForm() {
+  const [keyResultList, setKeyResultList] = useState<KeyResult[]>([]);
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -31,17 +38,7 @@ export default function App() {
               required={true}
             />
           </div>
-          <div className="flex flex-col item-center gap-2">
-            <label id="keyResult-label">Add a Key Result</label>
-            <input
-              type="text"
-              className={' rounded-md  border'}
-              id={'keyResult-input'}
-              name="keyResult"
-              required={true}
-            />
-          </div>
-
+          <KeyResultForm setKeyResultList={setKeyResultList} />
           <div className={'flex gap-4 justify-center'}>
             <button
               className={'border rounded-md px-3 py-1 bg-blue-500 text-white'}
@@ -55,6 +52,7 @@ export default function App() {
               Clear
             </button>
           </div>
+          <KeyResultList keyResultList={keyResultList} />
         </form>
       </div>
     </>

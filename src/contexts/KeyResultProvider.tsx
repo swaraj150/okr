@@ -4,11 +4,13 @@ import type { KeyResult } from '../types/okr_types.ts';
 type KeyResultContextType = {
     keyResultList: KeyResult[];
     addKeyResult: (keyResult: KeyResult) => void;
+    removeKeyResult: (keyResultId: number) => void;
 };
 
 export const KeyResultContext = createContext<KeyResultContextType>({
     keyResultList: [],
     addKeyResult: () => {},
+    removeKeyResult: () => {},
 });
 
 type KeyResultProviderProps = {
@@ -24,8 +26,21 @@ const KeyResultProvider = ({ children }: KeyResultProviderProps) => {
             setKeyResultList((keyResultList) => [...keyResultList, keyResult]);
         }
     };
+    const removeKeyResult = (keyResultId: number) => {
+        if (keyResultList.length === 0) {
+            return;
+        } else {
+            setKeyResultList((keyResultList) => {
+                return keyResultList.filter(
+                    (keyResult) => keyResult.id != keyResultId
+                );
+            });
+        }
+    };
     return (
-        <KeyResultContext.Provider value={{ keyResultList, addKeyResult }}>
+        <KeyResultContext.Provider
+            value={{ keyResultList, addKeyResult, removeKeyResult }}
+        >
             {children}
         </KeyResultContext.Provider>
     );

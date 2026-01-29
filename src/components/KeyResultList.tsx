@@ -3,21 +3,42 @@ import { useContext } from 'react';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultList = () => {
-    const { keyResultList } = useContext(KeyResultContext);
+    const { keyResultList, removeKeyResult } = useContext(KeyResultContext);
     const handleKeyResultProgressValue = (progress: number) => {
         if (progress > 100) return 100;
         else if (progress < 0) return 0;
         return progress;
     };
+    const handleRemoveKeyResult = (keyResultId: number) => {
+        removeKeyResult(keyResultId);
+    };
     return (
         <ul className={'divide-y divide-gray-500'}>
-            {keyResultList.map((keyResult: KeyResult, index: number) => (
-                <li key={index}>
-                    <p>Key Result Description is : {keyResult.description}</p>
-                    <p>
-                        Key Result Progress is :{' '}
-                        {handleKeyResultProgressValue(keyResult.progress)}
-                    </p>
+            {keyResultList.map((keyResult: KeyResult) => (
+                <li key={keyResult.id}>
+                    <div className={'flex gap-4'}>
+                        <div>
+                            <p>
+                                Key Result Description is :{' '}
+                                {keyResult.description}
+                            </p>
+                            <p>
+                                Key Result Progress is :{' '}
+                                {handleKeyResultProgressValue(
+                                    keyResult.progress
+                                ) + '%'}
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            className={
+                                'ml-auto text-red-500 hover:text-red-700 px-2 py-2'
+                            }
+                            onClick={() => handleRemoveKeyResult(keyResult.id)}
+                        >
+                            Remove
+                        </button>
+                    </div>
                 </li>
             ))}
         </ul>

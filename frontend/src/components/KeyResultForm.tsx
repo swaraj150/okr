@@ -1,15 +1,35 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { KeyResult } from '../types/okr_types.ts';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultForm = () => {
-    const { keyResultList, addKeyResult } = useContext(KeyResultContext);
+    const {
+        keyResultList,
+        addKeyResult,
+        selectedKeyResult,
+        setSelectedKeyResult,
+        editKeyResult,
+    } = useContext(KeyResultContext);
     const [keyResult, setKeyResult] = useState<KeyResult>({
-        id: 0,
+        id: '',
         description: '',
         progress: '',
     });
-
+    const [isEditable, setIsEditable] = useState(false);
+    useEffect(() => {
+        console.log(selectedKeyResult);
+        if (selectedKeyResult != null) {
+            setKeyResult(selectedKeyResult);
+            setIsEditable(true);
+        } else {
+            setKeyResult({
+                id: '',
+                description: '',
+                progress: '',
+            });
+            setIsEditable(false);
+        }
+    }, [selectedKeyResult]);
     const isDisabled = keyResult.description === '';
 
     return (
@@ -48,27 +68,48 @@ const KeyResultForm = () => {
                 />
             </div>
 
-            <button
-                className={'ml-auto text-blue-500 hover:text-blue-700'}
-                type="button"
-                onClick={() => {
-                    addKeyResult({
-                        ...keyResult,
-                        id:
-                            keyResultList.length > 0
-                                ? keyResultList[keyResultList.length - 1].id + 1
-                                : 0,
-                    });
-                    setKeyResult({
-                        id: 0,
-                        description: '',
-                        progress: '',
-                    });
-                }}
-                disabled={isDisabled}
-            >
-                Add a Key Result
-            </button>
+            <div className={'flex flex-col justify-center'}>
+                <button
+                    className={'ml-auto text-blue-500 hover:text-blue-700'}
+                    type="button"
+                    onClick={() => {
+                        addKeyResult({
+                            ...keyResult,
+                            id:
+                                keyResultList.length > 0
+                                    ? parseInt(
+                                          keyResultList[
+                                              keyResultList.length - 1
+                                          ].id + 1
+                                      ).toString(10)
+                                    : '0',
+                        });
+                        setKeyResult({
+                            id: '',
+                            description: '',
+                            progress: '',
+                        });
+                    }}
+                    disabled={isDisabled}
+                >
+                    Add new Key Result
+                </button>
+                {isEditable && (
+                    <button
+                        className={'ml-auto text-blue-500 hover:text-blue-700'}
+                        type="button"
+                        onClick={() => {
+                            editKeyResult({
+                                ...keyResult,
+                            });
+                            setSelectedKeyResult(null);
+                        }}
+                        disabled={isDisabled}
+                    >
+                        Edit Key Result
+                    </button>
+                )}
+            </div>
         </>
     );
 };

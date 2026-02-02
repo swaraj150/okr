@@ -3,13 +3,14 @@ import { useContext } from 'react';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultList = () => {
-    const { keyResultList, removeKeyResult } = useContext(KeyResultContext);
+    const { keyResultList, removeKeyResult, setSelectedKeyResult } =
+        useContext(KeyResultContext);
     const handleKeyResultProgressValue = (progress: number) => {
         if (progress > 100) return 100;
         else if (progress < 0) return 0;
         return progress;
     };
-    const handleRemoveKeyResult = (keyResultId: number) => {
+    const handleRemoveKeyResult = (keyResultId: string) => {
         removeKeyResult(keyResultId);
     };
     return (
@@ -17,7 +18,7 @@ const KeyResultList = () => {
             {keyResultList.map((keyResult: KeyResult) => (
                 <li key={keyResult.id}>
                     <div className={'flex gap-4'}>
-                        <div>
+                        <div onClick={() => setSelectedKeyResult(keyResult)}>
                             <p>
                                 Key Result Description is :{' '}
                                 {keyResult.description}

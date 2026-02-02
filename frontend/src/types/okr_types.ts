@@ -1,5 +1,5 @@
 export type KeyResult = {
-    id: number;
+    id: string;
     description: string;
     progress: string;
 };

@@ -1,314 +1,299 @@
 {
-    "okr": [
+  "okr": [
+    {
+      "id": "1",
+      "objective": "Learn React",
+      "keyResults": [
         {
-            "id": "1",
-            "objective": "Learn React",
-            "keyResults": [
-                {
-                    "id": 1,
-                    "description": "Understand JSX and rendering",
-                    "progress": 80
-                },
-                {
-                    "id": 2,
-                    "description": "Build reusable components",
-                    "progress": 70
-                },
-                {
-                    "id": 3,
-                    "description": "Master React Hooks",
-                    "progress": 60
-                },
-                {
-                    "id": 4,
-                    "description": "Handle state management",
-                    "progress": 55
-                },
-                {
-                    "id": 5,
-                    "description": "Optimize component performance",
-                    "progress": 40
-                }
-            ]
+          "id": 3,
+          "description": "Master React Hooks",
+          "progress": 60
         },
         {
-            "id": "2",
-            "objective": "Master TypeScript",
-            "keyResults": [
-                {
-                    "id": 6,
-                    "description": "Learn basic and advanced types",
-                    "progress": 90
-                },
-                {
-                    "id": 7,
-                    "description": "Use generics effectively",
-                    "progress": 65
-                },
-                {
-                    "id": 8,
-                    "description": "Type React components properly",
-                    "progress": 75
-                },
-                {
-                    "id": 9,
-                    "description": "Avoid any and unknown misuse",
-                    "progress": 60
-                },
-                {
-                    "id": 10,
-                    "description": "Create reusable type utilities",
-                    "progress": 45
-                }
-            ]
-        },
-        {
-            "id": "3",
-            "objective": "Improve Backend Skills",
-            "keyResults": [
-                {
-                    "id": 11,
-                    "description": "Design REST APIs",
-                    "progress": 80
-                },
-                {
-                    "id": 12,
-                    "description": "Implement validation and error handling",
-                    "progress": 70
-                },
-                {
-                    "id": 13,
-                    "description": "Secure APIs with JWT",
-                    "progress": 55
-                },
-                {
-                    "id": 14,
-                    "description": "Handle concurrency issues",
-                    "progress": 50
-                },
-                {
-                    "id": 15,
-                    "description": "Improve API response time",
-                    "progress": 45
-                }
-            ]
-        },
-        {
-            "id": "4",
-            "objective": "Database Optimization",
-            "keyResults": [
-                {
-                    "id": 16,
-                    "description": "Understand query execution plans",
-                    "progress": 65
-                },
-                {
-                    "id": 17,
-                    "description": "Create effective indexes",
-                    "progress": 70
-                },
-                {
-                    "id": 18,
-                    "description": "Normalize database schema",
-                    "progress": 60
-                },
-                {
-                    "id": 19,
-                    "description": "Reduce redundant queries",
-                    "progress": 55
-                },
-                {
-                    "id": 20,
-                    "description": "Implement caching layer",
-                    "progress": 35
-                }
-            ]
-        },
-        {
-            "id": "5",
-            "objective": "System Design",
-            "keyResults": [
-                {
-                    "id": 21,
-                    "description": "Understand load balancing",
-                    "progress": 60
-                },
-                {
-                    "id": 22,
-                    "description": "Design scalable architectures",
-                    "progress": 50
-                },
-                {
-                    "id": 23,
-                    "description": "Apply CAP theorem",
-                    "progress": 45
-                },
-                {
-                    "id": 24,
-                    "description": "Design fault-tolerant systems",
-                    "progress": 40
-                },
-                {
-                    "id": 25,
-                    "description": "Document system diagrams",
-                    "progress": 55
-                }
-            ]
-        },
-        {
-            "id": "6",
-            "objective": "Cloud & DevOps",
-            "keyResults": [
-                {
-                    "id": 26,
-                    "description": "Deploy application on AWS",
-                    "progress": 75
-                },
-                {
-                    "id": 27,
-                    "description": "Containerize app using Docker",
-                    "progress": 70
-                },
-                {
-                    "id": 28,
-                    "description": "Set up CI/CD pipeline",
-                    "progress": 55
-                },
-                {
-                    "id": 29,
-                    "description": "Monitor logs and metrics",
-                    "progress": 50
-                },
-                {
-                    "id": 30,
-                    "description": "Handle production incidents",
-                    "progress": 35
-                }
-            ]
-        },
-        {
-            "id": "7",
-            "objective": "Testing & Quality",
-            "keyResults": [
-                {
-                    "id": 31,
-                    "description": "Write unit tests",
-                    "progress": 65
-                },
-                {
-                    "id": 32,
-                    "description": "Add integration tests",
-                    "progress": 45
-                },
-                {
-                    "id": 33,
-                    "description": "Improve test coverage",
-                    "progress": 55
-                },
-                {
-                    "id": 34,
-                    "description": "Automate test runs",
-                    "progress": 50
-                },
-                {
-                    "id": 35,
-                    "description": "Reduce production bugs",
-                    "progress": 40
-                }
-            ]
-        },
-        {
-            "id": "8",
-            "objective": "Frontend Performance",
-            "keyResults": [
-                {
-                    "id": 36,
-                    "description": "Optimize bundle size",
-                    "progress": 50
-                },
-                {
-                    "id": 37,
-                    "description": "Implement lazy loading",
-                    "progress": 65
-                },
-                {
-                    "id": 38,
-                    "description": "Reduce re-renders",
-                    "progress": 60
-                },
-                {
-                    "id": 39,
-                    "description": "Optimize images and assets",
-                    "progress": 55
-                },
-                {
-                    "id": 40,
-                    "description": "Improve Lighthouse score",
-                    "progress": 45
-                }
-            ]
-        },
-        {
-            "id": "9",
-            "objective": "Learn GraphQL",
-            "keyResults": [
-                {
-                    "id": 41,
-                    "description": "Design GraphQL schema",
-                    "progress": 70
-                },
-                {
-                    "id": 42,
-                    "description": "Implement resolvers",
-                    "progress": 65
-                },
-                {
-                    "id": 43,
-                    "description": "Handle pagination and filtering",
-                    "progress": 55
-                },
-                {
-                    "id": 44,
-                    "description": "Secure GraphQL APIs",
-                    "progress": 45
-                },
-                {
-                    "id": 45,
-                    "description": "Integrate GraphQL with frontend",
-                    "progress": 60
-                }
-            ]
-        },
-        {
-            "id": "10",
-            "objective": "Game Development",
-            "keyResults": [
-                {
-                    "id": 46,
-                    "description": "Implement multiplayer logic",
-                    "progress": 40
-                },
-                {
-                    "id": 47,
-                    "description": "Optimize network sync",
-                    "progress": 35
-                },
-                {
-                    "id": 48,
-                    "description": "Handle latency and lag",
-                    "progress": 30
-                },
-                {
-                    "id": 49,
-                    "description": "Design game state management",
-                    "progress": 45
-                },
-                {
-                    "id": 50,
-                    "description": "Improve player experience",
-                    "progress": 50
-                }
-            ]
+          "id": 4,
+          "description": "Handle state management",
+          "progress": 55
         }
-    ]
+      ]
+    },
+    {
+      "id": "2",
+      "objective": "Master TypeScript",
+      "keyResults": [
+        {
+          "id": 6,
+          "description": "Learn basic and advanced types",
+          "progress": 90
+        },
+        {
+          "id": 7,
+          "description": "Use generics effectively",
+          "progress": 65
+        },
+        {
+          "id": 8,
+          "description": "Type React components properly",
+          "progress": 75
+        },
+        {
+          "id": 9,
+          "description": "Avoid any and unknown misuse",
+          "progress": 60
+        },
+        {
+          "id": 10,
+          "description": "Create reusable type utilities",
+          "progress": 45
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "objective": "Improve Backend Skills",
+      "keyResults": [
+        {
+          "id": 11,
+          "description": "Design REST APIs",
+          "progress": 80
+        },
+        {
+          "id": 12,
+          "description": "Implement validation and error handling",
+          "progress": 70
+        },
+        {
+          "id": 13,
+          "description": "Secure APIs with JWT",
+          "progress": 55
+        },
+        {
+          "id": 14,
+          "description": "Handle concurrency issues",
+          "progress": 50
+        },
+        {
+          "id": 15,
+          "description": "Improve API response time",
+          "progress": 45
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "objective": "Database Optimization",
+      "keyResults": [
+        {
+          "id": 16,
+          "description": "Understand query execution plans",
+          "progress": 65
+        },
+        {
+          "id": 17,
+          "description": "Create effective indexes",
+          "progress": 70
+        },
+        {
+          "id": 18,
+          "description": "Normalize database schema",
+          "progress": 60
+        },
+        {
+          "id": 19,
+          "description": "Reduce redundant queries",
+          "progress": 55
+        },
+        {
+          "id": 20,
+          "description": "Implement caching layer",
+          "progress": 35
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "objective": "System Design",
+      "keyResults": [
+        {
+          "id": 21,
+          "description": "Understand load balancing",
+          "progress": 60
+        },
+        {
+          "id": 22,
+          "description": "Design scalable architectures",
+          "progress": 50
+        },
+        {
+          "id": 23,
+          "description": "Apply CAP theorem",
+          "progress": 45
+        },
+        {
+          "id": 24,
+          "description": "Design fault-tolerant systems",
+          "progress": 40
+        },
+        {
+          "id": 25,
+          "description": "Document system diagrams",
+          "progress": 55
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "objective": "Cloud & DevOps",
+      "keyResults": [
+        {
+          "id": 26,
+          "description": "Deploy application on AWS",
+          "progress": 75
+        },
+        {
+          "id": 27,
+          "description": "Containerize app using Docker",
+          "progress": 70
+        },
+        {
+          "id": 28,
+          "description": "Set up CI/CD pipeline",
+          "progress": 55
+        },
+        {
+          "id": 29,
+          "description": "Monitor logs and metrics",
+          "progress": 50
+        },
+        {
+          "id": 30,
+          "description": "Handle production incidents",
+          "progress": 35
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "objective": "Testing & Quality",
+      "keyResults": [
+        {
+          "id": 31,
+          "description": "Write unit tests",
+          "progress": 65
+        },
+        {
+          "id": 32,
+          "description": "Add integration tests",
+          "progress": 45
+        },
+        {
+          "id": 33,
+          "description": "Improve test coverage",
+          "progress": 55
+        },
+        {
+          "id": 34,
+          "description": "Automate test runs",
+          "progress": 50
+        },
+        {
+          "id": 35,
+          "description": "Reduce production bugs",
+          "progress": 40
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "objective": "Frontend Performance",
+      "keyResults": [
+        {
+          "id": 36,
+          "description": "Optimize bundle size",
+          "progress": 50
+        },
+        {
+          "id": 37,
+          "description": "Implement lazy loading",
+          "progress": 65
+        },
+        {
+          "id": 38,
+          "description": "Reduce re-renders",
+          "progress": 60
+        },
+        {
+          "id": 39,
+          "description": "Optimize images and assets",
+          "progress": 55
+        },
+        {
+          "id": 40,
+          "description": "Improve Lighthouse score",
+          "progress": 45
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "objective": "Learn GraphQL",
+      "keyResults": [
+        {
+          "id": 41,
+          "description": "Design GraphQL schema",
+          "progress": 70
+        },
+        {
+          "id": 42,
+          "description": "Implement resolvers",
+          "progress": 65
+        },
+        {
+          "id": 43,
+          "description": "Handle pagination and filtering",
+          "progress": 55
+        },
+        {
+          "id": 44,
+          "description": "Secure GraphQL APIs",
+          "progress": 45
+        },
+        {
+          "id": 45,
+          "description": "Integrate GraphQL with frontend",
+          "progress": 60
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "objective": "Game Development",
+      "keyResults": [
+        {
+          "id": 46,
+          "description": "Implement multiplayer logic",
+          "progress": 40
+        },
+        {
+          "id": 47,
+          "description": "Optimize network sync",
+          "progress": 35
+        },
+        {
+          "id": 48,
+          "description": "Handle latency and lag",
+          "progress": 30
+        },
+        {
+          "id": 49,
+          "description": "Design game state management",
+          "progress": 45
+        },
+        {
+          "id": 50,
+          "description": "Improve player experience",
+          "progress": 50
+        }
+      ]
+    }
+  ]
 }

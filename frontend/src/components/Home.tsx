@@ -1,13 +1,16 @@
 import OkrList from './OkrList.tsx';
 import Modal from './Modal.tsx';
-import KeyResultProvider from '../contexts/KeyResultProvider.tsx';
+
 import OkrForm from './OkrForm.tsx';
 import { useEffect, useState } from 'react';
+import type { Okr } from '../types/okr_types.ts';
+import KeyResultProvider from '../contexts/KeyResultProvider.tsx';
 
 const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fetchOkr, setFetchOkr] = useState<boolean>(true);
     const [okrList, setOkrList] = useState([]);
+    const [selectedOkr, setSelectedOkr] = useState<Okr | null>(null);
     useEffect(() => {
         if (fetchOkr) {
             const fetchData = async () => {
@@ -28,6 +31,7 @@ const Home = () => {
                     }
                     onClick={() => {
                         setIsModalOpen(true);
+                        setSelectedOkr(null);
                     }}
                 >
                     Add Okr
@@ -37,13 +41,30 @@ const Home = () => {
 
             <Modal
                 isOpen={isModalOpen}
-                handleOnClose={() => setIsModalOpen(false)}
+                handleOnClose={() => {
+                    setIsModalOpen(false);
+                }}
             >
                 <KeyResultProvider>
-                    <OkrForm setFetchOkr={setFetchOkr} />
+                    <OkrForm
+                        setFetchOkr={setFetchOkr}
+                        mode={selectedOkr ? 'edit' : 'create'}
+                        selectedOkr={selectedOkr}
+                    />
                 </KeyResultProvider>
             </Modal>
-            <OkrList okrList={okrList} />
+            <OkrList
+                okrList={okrList}
+                onEdit={(okr) => {
+                    setSelectedOkr(okr);
+                    setIsModalOpen(true);
+                }}
+                onDelete={(okrId: string) => {
+                    setOkrList((prev) =>
+                        prev.filter((okr: Okr) => okr.id != okrId)
+                    );
+                }}
+            />
         </div>
     );
 };

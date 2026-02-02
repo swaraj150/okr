@@ -2,6 +2,8 @@ import type { KeyResult, Okr } from '../types/okr_types.ts';
 
 interface OkrListProps {
     okrList: Okr[];
+    onEdit: (okr: Okr) => void;
+    onDelete: (okrId: string) => void;
 }
 
 function KeyResults({ keyResults }: { keyResults: KeyResult[] }) {
@@ -46,7 +48,7 @@ function KeyResults({ keyResults }: { keyResults: KeyResult[] }) {
     );
 }
 
-const OkrList = ({ okrList }: OkrListProps) => {
+const OkrList = ({ okrList, onEdit, onDelete }: OkrListProps) => {
     return (
         <div className={'my-5 flex flex-col items-center gap-3 w-full'}>
             {okrList.map((okr) => {
@@ -62,9 +64,35 @@ const OkrList = ({ okrList }: OkrListProps) => {
                             shadow-md
                         "
                     >
-                        <h2 className="text-2xl font-bold text-gray-900">
-                            {okr.objective}
-                        </h2>
+                        <div className="flex flex-row justify-between ">
+                            <h2 className="text-2xl font-bold text-gray-900">
+                                {okr.objective}
+                            </h2>
+                            <div className="flex gap-3 text-m text-gray-600 ">
+                                <button onClick={() => onEdit(okr)}>
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        onDelete(okr.id);
+                                        fetch(
+                                            `http://localhost:3000/okr/${okr.id}`,
+                                            {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Content-Type':
+                                                        'application/json',
+                                                },
+                                            }
+                                        ).then(() => {
+                                            alert('Okr Deleted');
+                                        });
+                                    }}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
                         <div>
                             <KeyResults keyResults={okr.keyResults} />
                         </div>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import KeyResultForm from './KeyResultForm.tsx';
 import KeyResultList from './KeyResultList.tsx';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
@@ -6,35 +6,68 @@ import type { Okr } from '../types/okr_types.ts';
 
 export default function OkrForm({
     setFetchOkr,
+    mode,
+    selectedOkr,
 }: {
     setFetchOkr: React.Dispatch<React.SetStateAction<boolean>>;
+    mode: string;
+    selectedOkr: Okr | null;
 }) {
-    const { keyResultList } = useContext(KeyResultContext);
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const [objective, setObjective] = useState<string>('');
+    const { keyResultList, setKeyResultList } = useContext(KeyResultContext);
+    useEffect(() => {
+        if (selectedOkr != null) {
+            setObjective(selectedOkr.objective);
+            setKeyResultList(selectedOkr.keyResults);
+        }
+    }, []);
+    const handleSubmit = (
+        e: React.SubmitEvent<HTMLFormElement>,
+        mode: string
+    ) => {
         e.preventDefault();
-        const objective = new FormData(e.currentTarget).get('objective');
-        if (!objective || !keyResultList) {
-            return;
-        }
-        if (keyResultList.length == 0) {
-            alert('Please add Key Results');
-            return;
-        }
-        const okr: Okr = {
-            id: Math.floor(Math.random() * (100 - 10) + 10).toString(),
-            objective: objective.toString(),
-            keyResults: keyResultList,
-        };
-        fetch('http://localhost:3000/okr', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(okr),
-        }).then(() => {
-            setFetchOkr(true);
-            alert('Okr added');
-        });
+        if (mode === 'create' || selectedOkr === null) {
+            const objective = new FormData(e.currentTarget).get('objective');
+            if (!objective || !keyResultList) {
+                return;
+            }
+            if (keyResultList.length == 0) {
+                alert('Please add Key Results');
+                return;
+            }
+            const okr: Okr = {
+                id: Math.floor(Math.random() * (100 - 10) + 10).toString(),
+                objective: objective.toString(),
+                keyResults: keyResultList,
+            };
+            fetch('http://localhost:3000/okr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(okr),
+            }).then(() => {
+                setFetchOkr(true);
+                alert('Okr added');
+            });
+        } else if (mode == 'edit' && selectedOkr != null) {
+            setObjective(objective);
+            const okr: Okr = {
+                id: selectedOkr.id,
+                objective: objective,
+                keyResults: keyResultList,
+            };
+            fetch(`http://localhost:3000/okr`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(okr),
+            }).then(() => {
+                setFetchOkr(true);
+                alert('Okr edited');
+            });
+        } else return;
     };
 
     return (
@@ -47,7 +80,7 @@ export default function OkrForm({
                 className={
                     'flex flex-col w-125 min-h-[90vh] max-h-[90vh] gap-4 p-10 rounded-md shadow-xl bg-gray-100'
                 }
-                onSubmit={handleSubmit}
+                onSubmit={(e) => handleSubmit(e, mode)}
             >
                 <p className={'font-bold text-5xl'}>OKR Form</p>
                 <div className="flex flex-col item-center justify-center gap-2">
@@ -58,6 +91,10 @@ export default function OkrForm({
                         id={'objective-input'}
                         name="objective"
                         placeholder={'Enter an Objective'}
+                        value={objective}
+                        onChange={(e) => {
+                            setObjective(e.target.value);
+                        }}
                         required={true}
                     />
                 </div>

@@ -9,9 +9,8 @@ export class KeyResultDto {
 
     @IsNotEmpty()
     @IsDefined()
-    progress: number;
+    progress: string;
 
-    @IsNotEmpty()
-    @IsDefined()
-    toDelete: boolean;
+    toDelete?: boolean;
+    toCreate?: boolean;
 }

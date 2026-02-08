@@ -1,12 +1,12 @@
-import type { KeyResult, Okr } from '../types/okr_types.ts';
+import type { KeyResultState, OkrState } from '../types/okr_types.ts';
 
 interface OkrListProps {
-    okrList: Okr[];
-    onEdit: (okr: Okr) => void;
+    okrList: OkrState[];
+    onEdit: (okr: OkrState) => void;
     onDelete: (okrId: string) => void;
 }
 
-function KeyResults({ keyResults }: { keyResults: KeyResult[] }) {
+const KeyResults = ({ keyResults }: { keyResults: KeyResultState[] }) => {
     return (
         <div
             className="
@@ -46,9 +46,11 @@ function KeyResults({ keyResults }: { keyResults: KeyResult[] }) {
             ))}
         </div>
     );
-}
+};
 
 const OkrList = ({ okrList, onEdit, onDelete }: OkrListProps) => {
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
+
     return (
         <div className={'my-5 flex flex-col items-center gap-3 w-full'}>
             {okrList.map((okr) => {
@@ -66,7 +68,7 @@ const OkrList = ({ okrList, onEdit, onDelete }: OkrListProps) => {
                     >
                         <div className="flex flex-row justify-between ">
                             <h2 className="text-2xl font-bold text-gray-900">
-                                {okr.objective}
+                                {okr.title}
                             </h2>
                             <div className="flex gap-3 text-m text-gray-600 ">
                                 <button onClick={() => onEdit(okr)}>
@@ -75,16 +77,13 @@ const OkrList = ({ okrList, onEdit, onDelete }: OkrListProps) => {
                                 <button
                                     onClick={() => {
                                         onDelete(okr.id);
-                                        fetch(
-                                            `http://localhost:3000/okr/${okr.id}`,
-                                            {
-                                                method: 'DELETE',
-                                                headers: {
-                                                    'Content-Type':
-                                                        'application/json',
-                                                },
-                                            }
-                                        ).then(() => {
+                                        fetch(`${BASE_URL}${okr.id}`, {
+                                            method: 'DELETE',
+                                            headers: {
+                                                'Content-Type':
+                                                    'application/json',
+                                            },
+                                        }).then(() => {
                                             alert('Okr Deleted');
                                         });
                                     }}

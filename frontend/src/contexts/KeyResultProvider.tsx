@@ -1,16 +1,16 @@
 import React, { createContext, type ReactNode, useState } from 'react';
-import type { KeyResult } from '../types/okr_types.ts';
+import type { KeyResultState } from '../types/okr_types.ts';
 
 type KeyResultContextType = {
-    keyResultList: KeyResult[];
-    selectedKeyResult: KeyResult | null;
+    keyResultList: KeyResultState[];
+    selectedKeyResult: KeyResultState | null;
     setSelectedKeyResult: React.Dispatch<
-        React.SetStateAction<KeyResult | null>
+        React.SetStateAction<KeyResultState | null>
     >;
-    addKeyResult: (keyResult: KeyResult) => void;
-    removeKeyResult: (keyResultId: string) => void;
-    editKeyResult: (keyResult: KeyResult) => void;
-    setKeyResultList: (keyResultList: KeyResult[]) => void;
+    addKeyResult: (keyResult: KeyResultState) => void;
+    removeKeyResult: (keyResultId: string, mode: string) => void;
+    editKeyResult: (keyResult: KeyResultState) => void;
+    setKeyResultList: (keyResultList: KeyResultState[]) => void;
 };
 
 export const KeyResultContext = createContext<KeyResultContextType>({
@@ -28,28 +28,36 @@ type KeyResultProviderProps = {
 };
 
 const KeyResultProvider = ({ children }: KeyResultProviderProps) => {
-    const [keyResultList, setKeyResultList] = useState<KeyResult[]>([]);
+    const [keyResultList, setKeyResultList] = useState<KeyResultState[]>([]);
     const [selectedKeyResult, setSelectedKeyResult] =
-        useState<KeyResult | null>(null);
-    const addKeyResult = (keyResult: KeyResult) => {
-        if (keyResult.description.length > 5) {
-            return;
-        } else {
-            setKeyResultList((keyResultList) => [...keyResultList, keyResult]);
-        }
+        useState<KeyResultState | null>(null);
+
+    const addKeyResult = (keyResult: KeyResultState) => {
+        setKeyResultList((keyResultList) => [...keyResultList, keyResult]);
     };
-    const removeKeyResult = (keyResultId: string) => {
+    const removeKeyResult = (keyResultId: string, mode: string) => {
         if (keyResultList.length === 0) {
             return;
         } else {
-            setKeyResultList((keyResultList) => {
-                return keyResultList.filter(
-                    (keyResult) => keyResult.id != keyResultId
-                );
-            });
+            if (mode === 'create') {
+                setKeyResultList((keyResultList) => {
+                    return keyResultList.filter(
+                        (keyResult) => keyResult.id != keyResultId
+                    );
+                });
+            } else if (mode === 'edit') {
+                setKeyResultList((keyResultList) => {
+                    return keyResultList.map((kr) => {
+                        if (kr.id === keyResultId) {
+                            return { ...kr, toDelete: true };
+                        }
+                        return kr;
+                    });
+                });
+            }
         }
     };
-    const editKeyResult = (updatedKeyResult: KeyResult) => {
+    const editKeyResult = (updatedKeyResult: KeyResultState) => {
         setKeyResultList((prev) =>
             prev.map((kr) =>
                 kr.id === updatedKeyResult.id ? updatedKeyResult : kr

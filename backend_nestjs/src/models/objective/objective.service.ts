@@ -12,7 +12,14 @@ export class ObjectiveService {
     getAll() {
         return this.prismaService.objective.findMany({
             include: {
-                keyResults: true,
+                keyResults: {
+                    orderBy: {
+                        created_at: 'asc',
+                    },
+                },
+            },
+            orderBy: {
+                created_at: 'asc',
             },
         });
     }
@@ -41,15 +48,14 @@ export class ObjectiveService {
             },
         });
     }
-    async create(createObjectiveDto: ObjectiveDto) {
-        console.log(createObjectiveDto);
+    create(createObjectiveDto: ObjectiveDto) {
         return this.prismaService.objective.create({
             data: {
                 title: createObjectiveDto.title,
                 keyResults: {
                     create: createObjectiveDto.keyResults.map((kr) => ({
                         description: kr.description,
-                        progress: kr.progress,
+                        progress: parseInt(kr.progress, 10),
                     })),
                 },
             },
@@ -64,42 +70,20 @@ export class ObjectiveService {
         if (!objectiveId) {
             throw new BadRequestException('Objective is required');
         }
-        const objective = await this.prismaService.objective.update({
-            where: {
-                id: objectiveId,
-            },
-            data: {
-                title: updateObjectiveDto.title, // assert title should not be undefined in pipe
-            },
-            include: {
-                keyResults: true,
-            },
+        await this.prismaService.$transaction(async (tx) => {
+            await tx.objective.update({
+                where: { id: objectiveId },
+                data: { title: updateObjectiveDto.title },
+            });
+            await this.keyResultService.updateOkr(
+                objectiveId,
+                updateObjectiveDto.keyResults,
+                tx,
+            );
         });
-
-        const keyResultsToBeDeleted: string[] = updateObjectiveDto.keyResults
-            .filter(
-                (
-                    kr,
-                ): kr is {
-                    id: string;
-                    description: string;
-                    progress: number;
-                    toDelete: boolean;
-                } => {
-                    return kr.toDelete;
-                },
-            )
-            .map((kr) => kr.id);
-        await this.keyResultService.deleteAll(keyResultsToBeDeleted);
-        for (const keyResult of updateObjectiveDto.keyResults) {
-            if (keyResult.id) {
-                await this.keyResultService.update(keyResult);
-            } else {
-                await this.keyResultService.create(keyResult, objective.id);
-            }
-        }
-
-        return this.getOneById(objective.id);
+        const ob = await this.getOneById(objectiveId);
+        console.log(ob);
+        return ob;
     }
 
     delete(id: string) {

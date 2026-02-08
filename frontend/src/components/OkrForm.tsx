@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import KeyResultForm from './KeyResultForm.tsx';
 import KeyResultList from './KeyResultList.tsx';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
-import type { Okr } from '../types/okr_types.ts';
+import type { OkrState } from '../types/okr_types.ts';
 
 export default function OkrForm({
     setFetchOkr,
@@ -11,13 +11,15 @@ export default function OkrForm({
 }: {
     setFetchOkr: React.Dispatch<React.SetStateAction<boolean>>;
     mode: string;
-    selectedOkr: Okr | null;
+    selectedOkr: OkrState | null;
 }) {
     const [objective, setObjective] = useState<string>('');
+
     const { keyResultList, setKeyResultList } = useContext(KeyResultContext);
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     useEffect(() => {
         if (selectedOkr != null) {
-            setObjective(selectedOkr.objective);
+            setObjective(selectedOkr.title);
             setKeyResultList(selectedOkr.keyResults);
         }
     }, []);
@@ -35,12 +37,12 @@ export default function OkrForm({
                 alert('Please add Key Results');
                 return;
             }
-            const okr: Okr = {
-                id: Math.floor(Math.random() * (100 - 10) + 10).toString(),
-                objective: objective.toString(),
+            const okr: OkrState = {
+                id: `temp_okr_${Date.now()}`,
+                title: objective.toString(),
                 keyResults: keyResultList,
             };
-            fetch('http://localhost:3000/okr', {
+            fetch(BASE_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,12 +54,19 @@ export default function OkrForm({
             });
         } else if (mode == 'edit' && selectedOkr != null) {
             setObjective(objective);
-            const okr: Okr = {
+            const keyResultsToSend = keyResultList.map((kr) => {
+                if (kr.id.startsWith('temp_kr')) {
+                    return { ...kr, toCreate: true };
+                }
+                return kr;
+            });
+            const okr: OkrState = {
                 id: selectedOkr.id,
-                objective: objective,
-                keyResults: keyResultList,
+                title: objective,
+                keyResults: keyResultsToSend,
             };
-            fetch(`http://localhost:3000/okr`, {
+            console.log('edited okr', okr.keyResults);
+            fetch(BASE_URL, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +124,7 @@ export default function OkrForm({
                     </button>
                 </div>
                 <div className="flex-1 overflow-y-auto border rounded-md px-3 py-2 bg-white">
-                    <KeyResultList />
+                    <KeyResultList mode={mode} />
                 </div>
             </form>
         </div>

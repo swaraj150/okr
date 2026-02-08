@@ -7,11 +7,13 @@ import {
     Post,
     Query,
     Put,
+    UseFilters,
 } from '@nestjs/common';
 import { ObjectiveService } from './objective.service';
 import { ObjectiveDto } from './dto/objective.dto';
-
-@Controller('v2/objective')
+import { PrismaClientKnownRequestErrorFilter } from '../../common/exception-filters/prisma-client-known-request-error-filter';
+@UseFilters(PrismaClientKnownRequestErrorFilter)
+@Controller()
 export class ObjectiveController {
     constructor(private objectiveService: ObjectiveService) {}
 

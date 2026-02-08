@@ -1,21 +1,26 @@
-import type { KeyResult } from '../types/okr_types.ts';
-import { useContext } from 'react';
+import type { KeyResultState } from '../types/okr_types.ts';
+import { useContext, useMemo } from 'react';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
-const KeyResultList = () => {
+const KeyResultList = ({ mode }: { mode: string }) => {
     const { keyResultList, removeKeyResult, setSelectedKeyResult } =
         useContext(KeyResultContext);
+
+    const visibleKeyResults = useMemo(
+        () => keyResultList.filter((kr) => !kr.toDelete),
+        [keyResultList]
+    );
     const handleKeyResultProgressValue = (progress: number) => {
         if (progress > 100) return 100;
         else if (progress < 0) return 0;
         return progress;
     };
     const handleRemoveKeyResult = (keyResultId: string) => {
-        removeKeyResult(keyResultId);
+        removeKeyResult(keyResultId, mode);
     };
     return (
         <ul className={'divide-y divide-gray-500'}>
-            {keyResultList.map((keyResult: KeyResult) => (
+            {visibleKeyResults.map((keyResult: KeyResultState) => (
                 <li key={keyResult.id}>
                     <div className={'flex gap-4'}>
                         <div onClick={() => setSelectedKeyResult(keyResult)}>

@@ -1,11 +1,13 @@
-export type KeyResult = {
+export type KeyResultState = {
     id: string;
     description: string;
     progress: string;
+    toDelete?: boolean;
+    toCreate?: boolean;
 };
 
-export type Okr = {
+export type OkrState = {
     id: string;
-    objective: string;
-    keyResults: KeyResult[];
+    title: string;
+    keyResults: KeyResultState[];
 };

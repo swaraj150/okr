@@ -3,18 +3,19 @@ import Modal from './Modal.tsx';
 
 import OkrForm from './OkrForm.tsx';
 import { useEffect, useState } from 'react';
-import type { Okr } from '../types/okr_types.ts';
+import type { OkrState } from '../types/okr_types.ts';
 import KeyResultProvider from '../contexts/KeyResultProvider.tsx';
 
 const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fetchOkr, setFetchOkr] = useState<boolean>(true);
     const [okrList, setOkrList] = useState([]);
-    const [selectedOkr, setSelectedOkr] = useState<Okr | null>(null);
+    const [selectedOkr, setSelectedOkr] = useState<OkrState | null>(null);
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     useEffect(() => {
         if (fetchOkr) {
             const fetchData = async () => {
-                const res = await fetch('http://localhost:3000/okr');
+                const res = await fetch(`${BASE_URL}`);
                 return await res.json();
             };
             fetchData().then((r) => setOkrList(r));
@@ -61,7 +62,9 @@ const Home = () => {
                 }}
                 onDelete={(okrId: string) => {
                     setOkrList((prev) =>
-                        prev.filter((okr: Okr) => okr.id != okrId)
+                        prev.filter(
+                            (okr: OkrState) => okr.id != okrId || !okrId
+                        )
                     );
                 }}
             />

@@ -1,16 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
-import type { KeyResult } from '../types/okr_types.ts';
+import type { KeyResultState } from '../types/okr_types.ts';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultForm = () => {
     const {
-        keyResultList,
         addKeyResult,
         selectedKeyResult,
         setSelectedKeyResult,
         editKeyResult,
     } = useContext(KeyResultContext);
-    const [keyResult, setKeyResult] = useState<KeyResult>({
+    const [keyResult, setKeyResult] = useState<KeyResultState>({
         id: '',
         description: '',
         progress: '',
@@ -75,14 +74,7 @@ const KeyResultForm = () => {
                     onClick={() => {
                         addKeyResult({
                             ...keyResult,
-                            id:
-                                keyResultList.length > 0
-                                    ? parseInt(
-                                          keyResultList[
-                                              keyResultList.length - 1
-                                          ].id + 1
-                                      ).toString(10)
-                                    : '0',
+                            id: `temp_kr_${Date.now()}`,
                         });
                         setKeyResult({
                             id: '',

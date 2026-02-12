@@ -5,6 +5,7 @@ export type KeyResultState = {
     targetValue: number;
     metricType: string;
     objectiveId?: string;
+    toDelete: boolean;
 };
 
 export type ObjectiveState = {

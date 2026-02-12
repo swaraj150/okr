@@ -12,9 +12,11 @@ import { KeyResultService } from './key-result.service';
 
 import {
   CreateKeyResultDto,
+  DeleteKeyResultsDto,
   UpdateCurrentValueDto,
   UpdateKeyResultDto,
 } from './dto/key-result.dto';
+import { KeyResult } from '../../generated/prisma/client';
 
 @Controller('v3/key-result')
 export class KeyResultController {
@@ -40,8 +42,12 @@ export class KeyResultController {
     return this.keyResultService.updateCurrentValue(updateCurrentValueDto);
   }
 
-  @Delete()
+  @Delete(':id')
   delete(@Param('id') id: string) {
     return this.keyResultService.delete(id);
+  }
+  @Delete()
+  deleteAll(@Body() deleteKeyResultsDto: DeleteKeyResultsDto) {
+    return this.keyResultService.deleteAll(deleteKeyResultsDto);
   }
 }

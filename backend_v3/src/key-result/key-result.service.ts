@@ -60,7 +60,7 @@ export class KeyResultService {
       },
     });
 
-    this.eventEmitter.emit('update_completeness', {
+    await this.eventEmitter.emitAsync('update_completeness', {
       objectiveId: updateCurrentValueDto.objectiveId,
     });
   }

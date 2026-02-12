@@ -65,10 +65,14 @@ const OkrList = ({ okrList, onEdit, onDelete, setFetchOkr }: OkrListProps) => {
                             'w-full max-w-120 rounded-lg bg-white p-5 border border-gray-200 shadow-sm'
                         }
                     >
-                        <div className="flex flex-row justify-between ">
+                        <div className="flex flex-row justify-between">
                             <h2 className="text-2xl font-bold text-gray-900">
                                 {okr.title}
+                                <span className="ml-2 text-base font-normal text-gray-500">
+                                    ({okr.progress}%)
+                                </span>
                             </h2>
+
                             <ObjectiveMenu
                                 okr={okr}
                                 onAddKeyResult={() => {
@@ -80,15 +84,17 @@ const OkrList = ({ okrList, onEdit, onDelete, setFetchOkr }: OkrListProps) => {
                             />
                         </div>
                         <div className={'mt-3 divide-y divide-gray-200'}>
-                            {okr.keyResults.map((keyResult) => (
-                                <div key={keyResult.id}>
-                                    <KeyResult
-                                        keyResult={keyResult}
-                                        onUpdate={onCurrentValueUpdate}
-                                        objectiveId={okr.id}
-                                    />
-                                </div>
-                            ))}
+                            <ul>
+                                {okr.keyResults.map((keyResult) => (
+                                    <div key={keyResult.id}>
+                                        <KeyResult
+                                            keyResult={keyResult}
+                                            onUpdate={onCurrentValueUpdate}
+                                            objectiveId={okr.id}
+                                        />
+                                    </div>
+                                ))}
+                            </ul>
                         </div>
                     </div>
                 );

@@ -35,11 +35,15 @@ export class KeyResultService {
 
   async update(dto: UpdateKeyResultDto) {
     const { id, ...data } = dto;
-
-    return this.prismaService.keyResult.update({
+    await this.prismaService.keyResult.update({
       where: { id },
       data,
     });
+    if (dto.currentValue) {
+      this.eventEmitter.emit('update_completeness', {
+        objectiveId: dto.objectiveId,
+      });
+    }
   }
 
   delete(id: string) {

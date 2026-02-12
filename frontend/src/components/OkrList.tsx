@@ -99,7 +99,7 @@ const OkrList = ({ okrList, onEdit, onDelete, setFetchOkr }: OkrListProps) => {
                     setIsAddModalOpen(false);
                 }}
             >
-                <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 shadow-sm w-1/2">
+                <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 shadow-sm w-full">
                     <KeyResultForm
                         objectiveId={selectedObjectiveId}
                         onAddKeyResult={handleAddKeyResult}

@@ -67,7 +67,6 @@ export default function OkrForm({
                 progress: '0',
                 keyResults: keyResultsToSend,
             };
-            console.log('edited okr', okr.keyResults);
             fetch(BASE_URL, {
                 method: 'PUT',
                 headers: {
@@ -82,11 +81,7 @@ export default function OkrForm({
     };
 
     return (
-        <div
-            className={
-                'flex w-full min-h-screen justify-center items-center border font-mono'
-            }
-        >
+        <div className={'flex w-full justify-center items-center font-mono'}>
             <form
                 className={
                     'flex flex-col w-125 min-h-[90vh] max-h-[90vh] gap-4 p-10 rounded-md shadow-xl bg-gray-100'

@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 import { CreateChatDto } from './dto/create-chat.dto';
+import { ObjectiveService } from 'src/objective/objective.service';
 
 @Injectable()
 export class ChatBotService {
   private ai: any;
-  constructor() {
+  constructor(private readonly objectiveService: ObjectiveService) {
     this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   }
 
-  async generate(dto:CreateChatDto){
-      const systemPrompt=`
+  async generate(dto: CreateChatDto) {
+    const data = await this.objectiveService.getAll();
+    const promptData = this.convert(data);
+
+    const systemPrompt = `
       You are an OKR chatbot inside an OKR app.
  
   You will receive:
@@ -48,6 +52,8 @@ export class ChatBotService {
   - No JSON, no code blocks, no markdown headings.
 
   - Keep it concise (3–7 bullets), unless the user asks for more detail.
+
+  - Generate response so that it looks good in chats
   
   Behavior rules:
 
@@ -56,47 +62,60 @@ export class ChatBotService {
   - If the user asks for analysis, summarize progress and highlight gaps in bullets.
 
   - If the user asks a general question, answer briefly and offer a next step related to OKRs.
+
+
   
   Do not:
 
   - Return JSON.l̥
 
   - Repeat the full OKR input unless asked.`;
-      const response = await this.ai.models.generateContent({
+    const response = await this.ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents:[
-    // Convert previous chats
-    ...dto.chats.map(chat => ({
-      role: chat.role.toLowerCase() === "ai" ? "model" : "user",
-      parts: [{ text: chat.content }]
-    })),
+      contents: [
+        // Convert previous chats
+        ...dto.chats.map(chat => ({
+          role: chat.role.toLowerCase() === "ai" ? "model" : "user",
+          parts: [{ text: chat.content }]
+        })),
 
-    // Send OKR data as structured JSON text
-    {
-      role: "user",
-      parts: [
+        // Send OKR data as structured JSON text
         {
-          text: `
+          role: "user",
+          parts: [
+            {
+              text: `
 Here are my OKRs in JSON format:
 
-${JSON.stringify(dto.data, null, 2)}
+${JSON.stringify(promptData, null, 2)}
 
 Please calculate the overall progress and return a structured response.
 `
+            }
+          ]
         }
-      ]
-    }
-  ],
+      ],
       config: {
-        systemInstruction:systemPrompt,
+        systemInstruction: systemPrompt,
       },
     });
+    console.log(response.text)
     return response.text;
   }
 
 
-  
+  private convert(data: any) {
+    return data.map((item) => {
+      return {
+        objective: {
+          title: item.title,
+          progress: item.progress
+        },
+        keyResults: item.keyResults.map((kr) => {
+          return { description: kr.description, progress: kr.currentValue, target: kr.targetValue, metric: kr.metricType }
+        })
 
-  
-  
+      }
+    })
+  }
 }

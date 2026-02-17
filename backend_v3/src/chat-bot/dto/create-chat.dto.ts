@@ -1,6 +1,6 @@
 export class CreateChatDto {
     chats: ChatDto[];
-    data: OkrDto[]
+    // data: OkrDto[]
 }
 
 class ChatDto {

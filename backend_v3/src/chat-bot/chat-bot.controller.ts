@@ -8,7 +8,6 @@ export class ChatBotController {
 
   @Post()
   generate(@Body() createChatBotDto: CreateChatDto) {
-    console.log(createChatBotDto.data)
     return this.chatBotService.generate(createChatBotDto);
   }
 

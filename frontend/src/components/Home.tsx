@@ -12,6 +12,7 @@ const Home = () => {
     const [okrList, setOkrList] = useState([]);
     const [selectedOkr, setSelectedOkr] = useState<ObjectiveState | null>(null);
     const BASE_URL: string = import.meta.env.VITE_OBJECTIVE_BASE_URL;
+    const [prompt, setPrompt] = useState<string>('');
     useEffect(() => {
         if (fetchOkr) {
             const fetchData = async () => {
@@ -37,6 +38,32 @@ const Home = () => {
         <div className={'container relative font-mono bg-white'}>
             <div className={'flex justify-between '}>
                 <h1 className={' right-1/2 m-3 text-4xl z-20'}>Northstar</h1>
+                <div>
+                    <input
+                        type={'text'}
+                        value={prompt}
+                        onChange={(e) => setPrompt(e.target.value)}
+                    />
+                    <button
+                        onClick={async () => {
+                            await fetch(`${BASE_URL}/generate`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    prompt: prompt,
+                                }),
+                            }).then(() => {
+                                setFetchOkr(true);
+                                setPrompt('');
+                            });
+                        }}
+                    >
+                        Generate
+                    </button>
+                </div>
+
                 <button
                     className={
                         'mx-3 my-3 right-0 p-1 border rounded-md bg-gray-700 text-white'

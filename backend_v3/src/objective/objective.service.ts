@@ -2,10 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/objective.dto';
 import { OnEvent } from '@nestjs/event-emitter';
+import { Injector } from '@nestjs/core/injector/injector';
+import { OkrGeneratorService } from '../common/ai/okr-generator.service';
 
 @Injectable()
 export class ObjectiveService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly okrGeneratorService: OkrGeneratorService,
+  ) {}
 
   getAll() {
     return this.prismaService.objective.findMany({
@@ -83,6 +88,13 @@ export class ObjectiveService {
         progress: completeness.progress,
       },
     });
+  }
+
+  async generate(prompt: string) {
+    const response = await this.okrGeneratorService.generate(prompt);
+    console.log(response);
+    const parsed: CreateObjectiveDto = JSON.parse(response);
+    return this.create(parsed);
   }
 
   private checkIsCompleted(keyResults: any) {

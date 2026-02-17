@@ -9,3 +9,6 @@ export class UpdateObjectiveDto {
   id: string;
   title: string;
 }
+export class GenerateObjectiveDto {
+  prompt: string;
+}

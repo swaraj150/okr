@@ -4,12 +4,14 @@ import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/objective.dto';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injector } from '@nestjs/core/injector/injector';
 import { OkrGeneratorService } from '../common/ai/okr-generator.service';
+import { GeminiService } from 'src/common/ai/gemini.service';
 
 @Injectable()
 export class ObjectiveService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly okrGeneratorService: OkrGeneratorService,
+    private readonly geminiService:GeminiService
   ) {}
 
   getAll() {
@@ -39,8 +41,8 @@ export class ObjectiveService {
   delete(id: string) {
     return this.prismaService.objective.delete({ where: { id } });
   }
-  create(createObjectiveDto: CreateObjectiveDto) {
-    return this.prismaService.objective.create({
+  async create(createObjectiveDto: CreateObjectiveDto) {
+    const res=await this.prismaService.objective.create({
       data: {
         title: createObjectiveDto.title,
         isCompleted: createObjectiveDto.keyResults.length === 0,
@@ -58,6 +60,9 @@ export class ObjectiveService {
         keyResults: true,
       },
     });
+    const text=JSON.stringify(res);
+    const embedding=await this.geminiService.createEmbedding(text);
+    
   }
 
   update(updateObjectiveDto: UpdateObjectiveDto) {

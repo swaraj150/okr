@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.4.0
+ * Query Engine version: ab56fe763f921d033a6c195e7ddeb3e255bdbb57
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.4.0",
+  engine: "ab56fe763f921d033a6c195e7ddeb3e255bdbb57"
 }
 
 /**
@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Objective: 'Objective',
-  KeyResult: 'KeyResult'
+  KeyResult: 'KeyResult',
+  OkrEmbedding: 'OkrEmbedding'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "objective" | "keyResult"
+    modelProps: "objective" | "keyResult" | "okrEmbedding"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,64 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OkrEmbedding: {
+      payload: Prisma.$OkrEmbeddingPayload<ExtArgs>
+      fields: Prisma.OkrEmbeddingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OkrEmbeddingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OkrEmbeddingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>
+        }
+        findFirst: {
+          args: Prisma.OkrEmbeddingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OkrEmbeddingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>
+        }
+        findMany: {
+          args: Prisma.OkrEmbeddingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>[]
+        }
+        delete: {
+          args: Prisma.OkrEmbeddingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>
+        }
+        update: {
+          args: Prisma.OkrEmbeddingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>
+        }
+        deleteMany: {
+          args: Prisma.OkrEmbeddingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OkrEmbeddingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OkrEmbeddingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OkrEmbeddingPayload>[]
+        }
+        aggregate: {
+          args: Prisma.OkrEmbeddingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOkrEmbedding>
+        }
+        groupBy: {
+          args: Prisma.OkrEmbeddingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OkrEmbeddingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OkrEmbeddingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OkrEmbeddingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -573,6 +632,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
       $queryRawUnsafe: {
         args: [query: string, ...values: any[]],
         result: any
+      }
+      $queryRawTyped: {
+        args: runtime.UnknownTypedSql,
+        result: JsonObject
       }
     }
   }
@@ -614,6 +677,14 @@ export const KeyResultScalarFieldEnum = {
 } as const
 
 export type KeyResultScalarFieldEnum = (typeof KeyResultScalarFieldEnum)[keyof typeof KeyResultScalarFieldEnum]
+
+
+export const OkrEmbeddingScalarFieldEnum = {
+  id: 'id',
+  objectiveId: 'objectiveId'
+} as const
+
+export type OkrEmbeddingScalarFieldEnum = (typeof OkrEmbeddingScalarFieldEnum)[keyof typeof OkrEmbeddingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -805,6 +876,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   objective?: Prisma.ObjectiveOmit
   keyResult?: Prisma.KeyResultOmit
+  okrEmbedding?: Prisma.OkrEmbeddingOmit
 }
 
 /* Types for Logging */

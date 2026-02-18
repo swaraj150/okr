@@ -27,3 +27,8 @@ export type Objective = Prisma.ObjectiveModel
  * 
  */
 export type KeyResult = Prisma.KeyResultModel
+/**
+ * Model OkrEmbedding
+ * 
+ */
+export type OkrEmbedding = Prisma.OkrEmbeddingModel

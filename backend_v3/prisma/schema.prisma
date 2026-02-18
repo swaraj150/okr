@@ -8,6 +8,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../generated/prisma"
   moduleFormat = "cjs"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -21,6 +22,8 @@ model Objective {
   isCompleted Boolean
   progress    Int
   keyResults  KeyResult[]
+  embedding   OkrEmbedding?
+
 }
 
 model KeyResult {
@@ -32,4 +35,12 @@ model KeyResult {
   createdAt    DateTime   @default(now()) @db.Timestamp(6)
   objective    Objective? @relation(fields: [objectiveId], references: [id])
   objectiveId  String?
+  
+}
+
+model OkrEmbedding {
+  id String @id @default(uuid())
+  objectiveId String     @unique
+  objective   Objective  @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  embedding Unsupported("vector(3072)")
 }

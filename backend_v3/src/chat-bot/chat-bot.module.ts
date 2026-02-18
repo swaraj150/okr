@@ -4,9 +4,10 @@ import { ChatBotController } from './chat-bot.controller';
 import { ObjectiveService } from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
 import { OkrGeneratorService } from 'src/common/ai/okr-generator.service';
+import { GeminiService } from 'src/common/ai/gemini.service';
 
 @Module({
   controllers: [ChatBotController],
-  providers: [ChatBotService,ObjectiveService,PrismaService,OkrGeneratorService],
+  providers: [ChatBotService,GeminiService],
 })
 export class ChatBotModule {}

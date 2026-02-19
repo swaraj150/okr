@@ -16,14 +16,14 @@ export const ObjectiveSchema = z.object({
   keyResults: z.array(KeyResultSchema).min(1),
 });
 
-
 export class OkrGeneratorService {
   private ai: any;
   constructor() {
     this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   }
   async generate(prompt: string) {
-    const systemPrompt=okrGeneratorPrompt;
+    console.log(`invoking okr generate method with prompt`, prompt);
+    const systemPrompt = okrGeneratorPrompt;
     const response = await this.ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
@@ -48,7 +48,7 @@ export class OkrGeneratorService {
                   'description',
                   'currentValue',
                   'targetValue',
-                  'metricType'
+                  'metricType',
                 ],
                 properties: {
                   description: {
@@ -69,7 +69,7 @@ export class OkrGeneratorService {
             },
           },
         },
-      }
+      },
     });
     return response.text;
   }

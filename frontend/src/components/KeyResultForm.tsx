@@ -22,13 +22,13 @@ const KeyResultForm = ({
         currentValue: 0,
         targetValue: 100,
         metricType: 'Percentage',
+        toDelete: false,
     };
     const [keyResult, setKeyResult] = useState<KeyResultState>(
         defaultKeyResultState
     );
     const [isEditable, setIsEditable] = useState(false);
     useEffect(() => {
-        console.log(selectedKeyResult);
         if (selectedKeyResult != null) {
             setKeyResult(selectedKeyResult);
             setIsEditable(true);

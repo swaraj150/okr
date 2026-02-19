@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Objective: 'Objective',
-  KeyResult: 'KeyResult'
+  KeyResult: 'KeyResult',
+  OkrEmbedding: 'OkrEmbedding'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -93,6 +94,14 @@ export const KeyResultScalarFieldEnum = {
 } as const
 
 export type KeyResultScalarFieldEnum = (typeof KeyResultScalarFieldEnum)[keyof typeof KeyResultScalarFieldEnum]
+
+
+export const OkrEmbeddingScalarFieldEnum = {
+  id: 'id',
+  objectiveId: 'objectiveId'
+} as const
+
+export type OkrEmbeddingScalarFieldEnum = (typeof OkrEmbeddingScalarFieldEnum)[keyof typeof OkrEmbeddingScalarFieldEnum]
 
 
 export const SortOrder = {

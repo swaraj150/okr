@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   CreateKeyResultDto,
+  DeleteKeyResultsDto,
   UpdateCurrentValueDto,
   UpdateKeyResultDto,
 } from './dto/key-result.dto';
@@ -35,11 +36,15 @@ export class KeyResultService {
 
   async update(dto: UpdateKeyResultDto) {
     const { id, ...data } = dto;
-
-    return this.prismaService.keyResult.update({
+    await this.prismaService.keyResult.update({
       where: { id },
       data,
     });
+    if (dto.currentValue) {
+      this.eventEmitter.emit('update_completeness', {
+        objectiveId: dto.objectiveId,
+      });
+    }
   }
 
   delete(id: string) {
@@ -56,8 +61,19 @@ export class KeyResultService {
       },
     });
 
-    this.eventEmitter.emit('update_completeness', {
+    await this.eventEmitter.emitAsync('update_completeness', {
       objectiveId: updateCurrentValueDto.objectiveId,
+    });
+  }
+
+  deleteAll(deleteKeyResultsDto: DeleteKeyResultsDto) {
+    return this.prismaService.keyResult.deleteMany({
+      where: {
+        id: {
+          in: deleteKeyResultsDto.keyResultsToDelete,
+        },
+        objectiveId: deleteKeyResultsDto.objectiveId,
+      },
     });
   }
 }

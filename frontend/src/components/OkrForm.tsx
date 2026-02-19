@@ -49,44 +49,59 @@ export default function OkrForm({
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(okr),
-            }).then(() => {
-                setFetchOkr(true);
-                alert('Okr added');
-            });
+            })
+                .then(() => {
+                    setFetchOkr(true);
+                    alert('Okr added');
+                })
+                .catch(() => {
+                    alert('Oops! Something went wrong!');
+                });
         } else if (mode == 'edit' && selectedOkr != null) {
             setObjective(objective);
-            const keyResultsToSend = keyResultList.map((kr) => {
-                if (kr.id.startsWith('temp_kr')) {
-                    return { ...kr, toCreate: true };
-                }
-                return kr;
-            });
-            const okr: ObjectiveState = {
-                id: selectedOkr.id,
-                title: objective,
-                progress: '0',
-                keyResults: keyResultsToSend,
-            };
-            console.log('edited okr', okr.keyResults);
+            const keyResultsToDelete = keyResultList
+                .filter((kr) => {
+                    return kr.toDelete;
+                })
+                .map((kr) => kr.id);
+
             fetch(BASE_URL, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(okr),
-            }).then(() => {
-                setFetchOkr(true);
-                alert('Okr edited');
-            });
+                body: JSON.stringify({
+                    id: selectedOkr.id,
+                    title: objective.toString(),
+                }),
+            })
+                .then(() => {
+                    fetch(import.meta.env.VITE_KEYRESULT_BASE_URL, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            keyResultsToDelete: keyResultsToDelete,
+                            objectiveId: selectedOkr.id,
+                        }),
+                    })
+                        .then(() => {
+                            setFetchOkr(true);
+                            alert('Okr edited successfully');
+                        })
+                        .catch(() => {
+                            alert('Oops! Something went wrong!');
+                        });
+                })
+                .catch(() => {
+                    alert('Oops! Something went wrong!');
+                });
         } else return;
     };
 
     return (
-        <div
-            className={
-                'flex w-full min-h-screen justify-center items-center border font-mono'
-            }
-        >
+        <div className={'flex w-full justify-center items-center font-mono'}>
             <form
                 className={
                     'flex flex-col w-125 min-h-[90vh] max-h-[90vh] gap-4 p-10 rounded-md shadow-xl bg-gray-100'

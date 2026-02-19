@@ -1,14 +1,14 @@
-services:
-  db:
-    image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: okrs_v2
-      POSTGRES_USER: postgres1
-      POSTGRES_PASSWORD: postgres1
-    ports:
-      - '5433:5432'
+  services:
+    db:
+      image: ankane/pgvector
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: okrs_v2
+        POSTGRES_USER: postgres1
+        POSTGRES_PASSWORD: postgres1
+      ports:
+        - '5433:5432'
 
-volumes:
-  postgres_data:
+  volumes:
+    postgres_data:

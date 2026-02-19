@@ -1,5 +1,5 @@
 import type { KeyResultState } from '../types/okr_types.ts';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { KeyResultContext } from '../contexts/KeyResultProvider.tsx';
 
 const KeyResultList = ({ mode }: { mode: string }) => {
@@ -9,14 +9,18 @@ const KeyResultList = ({ mode }: { mode: string }) => {
     const handleRemoveKeyResult = (keyResultId: string) => {
         removeKeyResult(keyResultId, mode);
     };
+    const visibleKeyResults = useMemo(
+        () => keyResultList.filter((kr) => !kr.toDelete),
+        [keyResultList]
+    );
     return (
         <ul className="divide-y divide-gray-200">
-            {keyResultList.length === 0 ? (
+            {visibleKeyResults.length === 0 ? (
                 <li className="py-4 text-gray-500 text-center">
                     No key results yet
                 </li>
             ) : (
-                keyResultList.map((keyResult: KeyResultState) => {
+                visibleKeyResults.map((keyResult: KeyResultState) => {
                     return (
                         <li
                             key={keyResult.id}

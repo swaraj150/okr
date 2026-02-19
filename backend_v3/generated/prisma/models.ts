@@ -10,4 +10,5 @@
  */
 export type * from './models/Objective.js'
 export type * from './models/KeyResult.js'
+export type * from './models/OkrEmbedding.js'
 export type * from './commonInputTypes.js'

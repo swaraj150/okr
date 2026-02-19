@@ -217,6 +217,7 @@ export type ObjectiveWhereInput = {
   isCompleted?: Prisma.BoolFilter<"Objective"> | boolean
   progress?: Prisma.IntFilter<"Objective"> | number
   keyResults?: Prisma.KeyResultListRelationFilter
+  embedding?: Prisma.XOR<Prisma.OkrEmbeddingNullableScalarRelationFilter, Prisma.OkrEmbeddingWhereInput> | null
 }
 
 export type ObjectiveOrderByWithRelationInput = {
@@ -226,6 +227,7 @@ export type ObjectiveOrderByWithRelationInput = {
   isCompleted?: Prisma.SortOrder
   progress?: Prisma.SortOrder
   keyResults?: Prisma.KeyResultOrderByRelationAggregateInput
+  embedding?: Prisma.OkrEmbeddingOrderByWithRelationInput
 }
 
 export type ObjectiveWhereUniqueInput = Prisma.AtLeast<{
@@ -238,6 +240,7 @@ export type ObjectiveWhereUniqueInput = Prisma.AtLeast<{
   isCompleted?: Prisma.BoolFilter<"Objective"> | boolean
   progress?: Prisma.IntFilter<"Objective"> | number
   keyResults?: Prisma.KeyResultListRelationFilter
+  embedding?: Prisma.XOR<Prisma.OkrEmbeddingNullableScalarRelationFilter, Prisma.OkrEmbeddingWhereInput> | null
 }, "id">
 
 export type ObjectiveOrderByWithAggregationInput = {
@@ -271,6 +274,7 @@ export type ObjectiveCreateInput = {
   isCompleted: boolean
   progress: number
   keyResults?: Prisma.KeyResultCreateNestedManyWithoutObjectiveInput
+  embedding?: Prisma.OkrEmbeddingCreateNestedOneWithoutObjectiveInput
 }
 
 export type ObjectiveUncheckedCreateInput = {
@@ -280,6 +284,7 @@ export type ObjectiveUncheckedCreateInput = {
   isCompleted: boolean
   progress: number
   keyResults?: Prisma.KeyResultUncheckedCreateNestedManyWithoutObjectiveInput
+  embedding?: Prisma.OkrEmbeddingUncheckedCreateNestedOneWithoutObjectiveInput
 }
 
 export type ObjectiveUpdateInput = {
@@ -289,6 +294,7 @@ export type ObjectiveUpdateInput = {
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   progress?: Prisma.IntFieldUpdateOperationsInput | number
   keyResults?: Prisma.KeyResultUpdateManyWithoutObjectiveNestedInput
+  embedding?: Prisma.OkrEmbeddingUpdateOneWithoutObjectiveNestedInput
 }
 
 export type ObjectiveUncheckedUpdateInput = {
@@ -298,6 +304,7 @@ export type ObjectiveUncheckedUpdateInput = {
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   progress?: Prisma.IntFieldUpdateOperationsInput | number
   keyResults?: Prisma.KeyResultUncheckedUpdateManyWithoutObjectiveNestedInput
+  embedding?: Prisma.OkrEmbeddingUncheckedUpdateOneWithoutObjectiveNestedInput
 }
 
 export type ObjectiveCreateManyInput = {
@@ -361,6 +368,11 @@ export type ObjectiveNullableScalarRelationFilter = {
   isNot?: Prisma.ObjectiveWhereInput | null
 }
 
+export type ObjectiveScalarRelationFilter = {
+  is?: Prisma.ObjectiveWhereInput
+  isNot?: Prisma.ObjectiveWhereInput
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -397,12 +409,21 @@ export type ObjectiveUpdateOneWithoutKeyResultsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ObjectiveUpdateToOneWithWhereWithoutKeyResultsInput, Prisma.ObjectiveUpdateWithoutKeyResultsInput>, Prisma.ObjectiveUncheckedUpdateWithoutKeyResultsInput>
 }
 
+export type ObjectiveUpdateOneRequiredWithoutEmbeddingNestedInput = {
+  create?: Prisma.XOR<Prisma.ObjectiveCreateWithoutEmbeddingInput, Prisma.ObjectiveUncheckedCreateWithoutEmbeddingInput>
+  connectOrCreate?: Prisma.ObjectiveCreateOrConnectWithoutEmbeddingInput
+  upsert?: Prisma.ObjectiveUpsertWithoutEmbeddingInput
+  connect?: Prisma.ObjectiveWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ObjectiveUpdateToOneWithWhereWithoutEmbeddingInput, Prisma.ObjectiveUpdateWithoutEmbeddingInput>, Prisma.ObjectiveUncheckedUpdateWithoutEmbeddingInput>
+}
+
 export type ObjectiveCreateWithoutKeyResultsInput = {
   id?: string
   title: string
   createdAt?: Date | string
   isCompleted: boolean
   progress: number
+  embedding?: Prisma.OkrEmbeddingCreateNestedOneWithoutObjectiveInput
 }
 
 export type ObjectiveUncheckedCreateWithoutKeyResultsInput = {
@@ -411,6 +432,7 @@ export type ObjectiveUncheckedCreateWithoutKeyResultsInput = {
   createdAt?: Date | string
   isCompleted: boolean
   progress: number
+  embedding?: Prisma.OkrEmbeddingUncheckedCreateNestedOneWithoutObjectiveInput
 }
 
 export type ObjectiveCreateOrConnectWithoutKeyResultsInput = {
@@ -435,6 +457,7 @@ export type ObjectiveUpdateWithoutKeyResultsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  embedding?: Prisma.OkrEmbeddingUpdateOneWithoutObjectiveNestedInput
 }
 
 export type ObjectiveUncheckedUpdateWithoutKeyResultsInput = {
@@ -443,6 +466,59 @@ export type ObjectiveUncheckedUpdateWithoutKeyResultsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  embedding?: Prisma.OkrEmbeddingUncheckedUpdateOneWithoutObjectiveNestedInput
+}
+
+export type ObjectiveCreateWithoutEmbeddingInput = {
+  id?: string
+  title: string
+  createdAt?: Date | string
+  isCompleted: boolean
+  progress: number
+  keyResults?: Prisma.KeyResultCreateNestedManyWithoutObjectiveInput
+}
+
+export type ObjectiveUncheckedCreateWithoutEmbeddingInput = {
+  id?: string
+  title: string
+  createdAt?: Date | string
+  isCompleted: boolean
+  progress: number
+  keyResults?: Prisma.KeyResultUncheckedCreateNestedManyWithoutObjectiveInput
+}
+
+export type ObjectiveCreateOrConnectWithoutEmbeddingInput = {
+  where: Prisma.ObjectiveWhereUniqueInput
+  create: Prisma.XOR<Prisma.ObjectiveCreateWithoutEmbeddingInput, Prisma.ObjectiveUncheckedCreateWithoutEmbeddingInput>
+}
+
+export type ObjectiveUpsertWithoutEmbeddingInput = {
+  update: Prisma.XOR<Prisma.ObjectiveUpdateWithoutEmbeddingInput, Prisma.ObjectiveUncheckedUpdateWithoutEmbeddingInput>
+  create: Prisma.XOR<Prisma.ObjectiveCreateWithoutEmbeddingInput, Prisma.ObjectiveUncheckedCreateWithoutEmbeddingInput>
+  where?: Prisma.ObjectiveWhereInput
+}
+
+export type ObjectiveUpdateToOneWithWhereWithoutEmbeddingInput = {
+  where?: Prisma.ObjectiveWhereInput
+  data: Prisma.XOR<Prisma.ObjectiveUpdateWithoutEmbeddingInput, Prisma.ObjectiveUncheckedUpdateWithoutEmbeddingInput>
+}
+
+export type ObjectiveUpdateWithoutEmbeddingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  progress?: Prisma.IntFieldUpdateOperationsInput | number
+  keyResults?: Prisma.KeyResultUpdateManyWithoutObjectiveNestedInput
+}
+
+export type ObjectiveUncheckedUpdateWithoutEmbeddingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  progress?: Prisma.IntFieldUpdateOperationsInput | number
+  keyResults?: Prisma.KeyResultUncheckedUpdateManyWithoutObjectiveNestedInput
 }
 
 
@@ -483,6 +559,7 @@ export type ObjectiveSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   isCompleted?: boolean
   progress?: boolean
   keyResults?: boolean | Prisma.Objective$keyResultsArgs<ExtArgs>
+  embedding?: boolean | Prisma.Objective$embeddingArgs<ExtArgs>
   _count?: boolean | Prisma.ObjectiveCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["objective"]>
 
@@ -513,6 +590,7 @@ export type ObjectiveSelectScalar = {
 export type ObjectiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "createdAt" | "isCompleted" | "progress", ExtArgs["result"]["objective"]>
 export type ObjectiveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   keyResults?: boolean | Prisma.Objective$keyResultsArgs<ExtArgs>
+  embedding?: boolean | Prisma.Objective$embeddingArgs<ExtArgs>
   _count?: boolean | Prisma.ObjectiveCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ObjectiveIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -522,6 +600,7 @@ export type $ObjectivePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Objective"
   objects: {
     keyResults: Prisma.$KeyResultPayload<ExtArgs>[]
+    embedding: Prisma.$OkrEmbeddingPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -924,6 +1003,7 @@ readonly fields: ObjectiveFieldRefs;
 export interface Prisma__ObjectiveClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   keyResults<T extends Prisma.Objective$keyResultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Objective$keyResultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KeyResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  embedding<T extends Prisma.Objective$embeddingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Objective$embeddingArgs<ExtArgs>>): Prisma.Prisma__OkrEmbeddingClient<runtime.Types.Result.GetResult<Prisma.$OkrEmbeddingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1367,6 +1447,25 @@ export type Objective$keyResultsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.KeyResultScalarFieldEnum | Prisma.KeyResultScalarFieldEnum[]
+}
+
+/**
+ * Objective.embedding
+ */
+export type Objective$embeddingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OkrEmbedding
+   */
+  select?: Prisma.OkrEmbeddingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OkrEmbedding
+   */
+  omit?: Prisma.OkrEmbeddingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OkrEmbeddingInclude<ExtArgs> | null
+  where?: Prisma.OkrEmbeddingWhereInput
 }
 
 /**

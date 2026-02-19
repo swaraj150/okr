@@ -8,7 +8,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { ObjectiveService } from './objective.service';
-import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/objective.dto';
+import {
+  CreateObjectiveDto,
+  GenerateObjectiveDto,
+  UpdateObjectiveDto,
+} from './dto/objective.dto';
+import { OkrGeneratorService } from '../common/ai/okr-generator.service';
 
 @Controller('v3/objective')
 export class ObjectiveController {
@@ -25,6 +30,11 @@ export class ObjectiveController {
   @Post()
   create(@Body() createObjectiveDto: CreateObjectiveDto) {
     return this.objectiveService.create(createObjectiveDto);
+  }
+
+  @Post('/generate')
+  generateOkr(@Body() req: GenerateObjectiveDto) {
+    return this.objectiveService.generate(req.prompt);
   }
 
   @Put('/')

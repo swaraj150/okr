@@ -20,3 +20,8 @@ export class UpdateCurrentValueDto {
   currentValue: number;
   objectiveId: string;
 }
+
+export class DeleteKeyResultsDto {
+  keyResultsToDelete: string[];
+  objectiveId: string;
+}

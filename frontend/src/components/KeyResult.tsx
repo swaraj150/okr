@@ -42,8 +42,8 @@ export const KeyResult = ({
     };
 
     return (
-        <li className="py-3 list-none">
-            <div className="flex items-center justify-between gap-4">
+        <li className="py-3 list-none ">
+            <div className="flex items-center justify-between gap-4 ">
                 <div className="flex items-center gap-2 flex-1">
                     {isCompleted && <span className="text-green-600">✔</span>}
 
@@ -67,10 +67,7 @@ export const KeyResult = ({
                             )
                         ) : (
                             <>
-                                {formatValue(
-                                    keyResult.currentValue,
-                                    keyResult.metricType
-                                )}
+                                {keyResult.currentValue}
                                 <span className="mx-1 text-gray-400">→</span>
                                 {formatValue(
                                     keyResult.targetValue,
@@ -118,10 +115,6 @@ export const KeyResult = ({
                         }
                         className="w-20 border rounded px-2 py-1 text-sm"
                     />
-
-                    <span className="text-sm text-gray-500">
-                        {keyResult.metricType}
-                    </span>
 
                     <button
                         onClick={handleSave}

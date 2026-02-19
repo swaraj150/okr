@@ -2,9 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/objective.dto';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Injector } from '@nestjs/core/injector/injector';
 import { OkrGeneratorService } from '../common/ai/okr-generator.service';
-import { GeminiService } from 'src/common/ai/gemini.service';
+import { GeminiService } from '../common/ai/gemini.service';
 
 @Injectable()
 export class ObjectiveService {
@@ -104,14 +103,10 @@ export class ObjectiveService {
 
   private checkIsCompleted(keyResults: any) {
     let sum = 0;
-
     for (const keyResult of keyResults) {
-      console.log(`${keyResult.currentValue} and ${keyResult.targetValue}`);
       sum = sum + (keyResult.currentValue / keyResult.targetValue) * 100;
     }
-    console.log(sum);
     const progress = keyResults.length === 0 ? 100 : sum / keyResults.length;
-    console.log(sum / keyResults.length);
     return {
       progress: progress,
       isCompleted: progress === 100,

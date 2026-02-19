@@ -1,13 +1,5 @@
-// gemini.service.ts
-
 import { Injectable } from '@nestjs/common';
-import {
-  FunctionCall,
-  GoogleGenAI,
-  ToolListUnion,
-  ToolUnion,
-} from '@google/genai';
-import { Tool } from '@google/genai';
+import { FunctionCall, GoogleGenAI, Tool } from '@google/genai';
 
 @Injectable()
 export class GeminiService {

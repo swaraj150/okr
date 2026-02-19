@@ -18,7 +18,7 @@ export default function OkrForm({
     const [objective, setObjective] = useState<string>('');
 
     const { keyResultList, setKeyResultList } = useContext(KeyResultContext);
-    const BASE_URL: string = import.meta.env.VITE_OBJECTIVE_BASE_URL;
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     useEffect(() => {
         if (selectedOkr != null) {
             setObjective(selectedOkr.title);
@@ -45,7 +45,7 @@ export default function OkrForm({
                 progress: '0',
                 keyResults: keyResultList,
             };
-            fetch(BASE_URL, {
+            fetch(`${BASE_URL}/objective`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,18 +68,17 @@ export default function OkrForm({
                 })
                 .map((kr) => kr.id);
 
-            fetch(BASE_URL, {
+            fetch(`${BASE_URL}/objective/${selectedOkr.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: selectedOkr.id,
                     title: objective.toString(),
                 }),
             })
                 .then(() => {
-                    fetch(import.meta.env.VITE_KEYRESULT_BASE_URL, {
+                    fetch(`${BASE_URL}/objective/${selectedOkr.id}/key-result/`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',

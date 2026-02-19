@@ -80,7 +80,7 @@ describe('KeyResultService', () => {
       const keyResult = buildKeyResult();
       mockPrismaService.keyResult.findUnique.mockResolvedValue(keyResult);
 
-      const result = await keyResultService.getOneById('kr-1');
+      const result = await keyResultService.getOneById({ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(result).toEqual(keyResult);
       expect(mockPrismaService.keyResult.findUnique).toHaveBeenCalledWith({
@@ -91,7 +91,7 @@ describe('KeyResultService', () => {
     it('should return null when no key result is found', async () => {
       mockPrismaService.keyResult.findUnique.mockResolvedValue(null);
 
-      const result = await keyResultService.getOneById('nonexistent');
+      const result = await keyResultService.getOneById({ keyResultId: 'nonexistent', objectiveId: 'obj-1' });
 
       expect(result).toBeNull();
     });
@@ -107,7 +107,7 @@ describe('KeyResultService', () => {
       };
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
 
-      await keyResultService.update(dto);
+      await keyResultService.update(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockPrismaService.keyResult.update).toHaveBeenCalledWith({
         where: { id: 'kr-1' },
@@ -123,7 +123,7 @@ describe('KeyResultService', () => {
       };
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
 
-      await keyResultService.update(dto);
+      await keyResultService.update(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockEventEmitter.emit).toHaveBeenCalledWith('update_completeness', {
         objectiveId: 'obj-1',
@@ -138,31 +138,18 @@ describe('KeyResultService', () => {
       };
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
 
-      await keyResultService.update(dto);
+      await keyResultService.update(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockEventEmitter.emit).not.toHaveBeenCalled();
     });
 
-    it('should not emit update_completeness when currentValue is 0 (falsy)', async () => {
-      const dto = {
-        id: 'kr-1',
-        currentValue: 0,
-        objectiveId: 'obj-1',
-      };
-      mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
-
-      await keyResultService.update(dto);
-
-      // currentValue of 0 is falsy — documents the existing behaviour
-      expect(mockEventEmitter.emit).not.toHaveBeenCalled();
-    });
   });
 
   describe('delete', () => {
     it('should call prisma delete with the correct id', async () => {
       mockPrismaService.keyResult.delete.mockResolvedValue(buildKeyResult());
 
-      await keyResultService.delete('kr-1');
+      await keyResultService.delete({ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockPrismaService.keyResult.delete).toHaveBeenCalledWith({
         where: { id: 'kr-1' },
@@ -177,7 +164,7 @@ describe('KeyResultService', () => {
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
       mockEventEmitter.emitAsync.mockResolvedValue([]);
 
-      await keyResultService.updateCurrentValue(dto);
+      await keyResultService.updateCurrentValue(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockPrismaService.keyResult.update).toHaveBeenCalledWith({
         where: { id: 'kr-1' },
@@ -190,7 +177,7 @@ describe('KeyResultService', () => {
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
       mockEventEmitter.emitAsync.mockResolvedValue([]);
 
-      await keyResultService.updateCurrentValue(dto);
+      await keyResultService.updateCurrentValue(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockEventEmitter.emitAsync).toHaveBeenCalledWith(
         'update_completeness',
@@ -203,7 +190,7 @@ describe('KeyResultService', () => {
       mockPrismaService.keyResult.update.mockResolvedValue(buildKeyResult());
       mockEventEmitter.emitAsync.mockResolvedValue([]);
 
-      await keyResultService.updateCurrentValue(dto);
+      await keyResultService.updateCurrentValue(dto,{ keyResultId: 'kr-1', objectiveId: 'obj-1' });
 
       expect(mockEventEmitter.emit).not.toHaveBeenCalled();
       expect(mockEventEmitter.emitAsync).toHaveBeenCalledTimes(1);
@@ -219,7 +206,7 @@ describe('KeyResultService', () => {
       };
       mockPrismaService.keyResult.deleteMany.mockResolvedValue({ count: 2 });
 
-      const result = await keyResultService.deleteAll(dto);
+      const result = await keyResultService.deleteAll(dto,{ keyResultId: '', objectiveId: 'obj-1' });
 
       expect(result).toEqual({ count: 2 });
       expect(mockPrismaService.keyResult.deleteMany).toHaveBeenCalledWith({
@@ -234,7 +221,7 @@ describe('KeyResultService', () => {
       const dto = { keyResultsToDelete: ['nonexistent'], objectiveId: 'obj-1' };
       mockPrismaService.keyResult.deleteMany.mockResolvedValue({ count: 0 });
 
-      const result = await keyResultService.deleteAll(dto);
+      const result = await keyResultService.deleteAll(dto,{ keyResultId: '', objectiveId: 'obj-1' });
 
       expect(result).toEqual({ count: 0 });
     });

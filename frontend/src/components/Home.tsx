@@ -13,13 +13,13 @@ const Home = () => {
     const [fetchOkr, setFetchOkr] = useState<boolean>(true);
     const [okrList, setOkrList] = useState([]);
     const [selectedOkr, setSelectedOkr] = useState<ObjectiveState | null>(null);
-    const BASE_URL: string = import.meta.env.VITE_OBJECTIVE_BASE_URL;
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     const [prompt, setPrompt] = useState<string>('');
 
     useEffect(() => {
         if (fetchOkr) {
             const fetchData = async () => {
-                const res = await fetch(`${BASE_URL}`);
+                const res = await fetch(`${BASE_URL}/objective`);
                 return await res.json();
             };
             fetchData().then((r) => setOkrList(r));
@@ -28,7 +28,7 @@ const Home = () => {
     }, [fetchOkr]);
 
     const onDelete = (id: string) => {
-        fetch(`${BASE_URL}/${id}`, {
+        fetch(`${BASE_URL}/objective/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const Home = () => {
         });
     };
     const handleGenerate = async () => {
-        await fetch(`${BASE_URL}/generate`, {
+        await fetch(`${BASE_URL}/objective/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,10 +46,14 @@ const Home = () => {
             body: JSON.stringify({
                 prompt: prompt,
             }),
+        }).then(()=>{
+            setFetchOkr(true);
+            setPrompt('');
+            
+        }).catch(()=>{
+            alert("failed to generate okr")
         });
 
-        setFetchOkr(true);
-        setPrompt('');
     };
 
 

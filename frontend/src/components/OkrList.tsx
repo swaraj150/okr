@@ -23,15 +23,13 @@ const OkrList = ({ okrList, onEdit, onDelete, setFetchOkr }: OkrListProps) => {
         currentValue: number,
         objectiveId: string
     ) => {
-        fetch(`${import.meta.env.VITE_KEYRESULT_BASE_URL}/current-value`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/objective/${objectiveId}/key-result/${keyResultId}/current-value`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id: keyResultId,
                 currentValue: currentValue,
-                objectiveId: objectiveId,
             }),
         }).then(() => {
             setFetchOkr(true);
@@ -42,7 +40,7 @@ const OkrList = ({ okrList, onEdit, onDelete, setFetchOkr }: OkrListProps) => {
         keyResult: KeyResultState,
         objectiveId: string
     ) => {
-        fetch(`${import.meta.env.VITE_KEYRESULT_BASE_URL}`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/objective/${objectiveId}/key-result`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

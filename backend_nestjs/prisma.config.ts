@@ -2,7 +2,6 @@
 // npm install --save-dev prisma dotenv
 import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
-import { config } from 'dotenv';
 export default defineConfig({
     schema: 'prisma/schema.prisma',
     migrations: {
@@ -10,6 +9,5 @@ export default defineConfig({
     },
     datasource: {
         url: process.env['DATABASE_URL'],
-        // url: 'postgresql://postgres1:postgres1@localhost:5433/okrs',
     },
 });

@@ -3,6 +3,7 @@ import type { KeyResultState } from '../types/okr_types.ts';
 
 type KeyResultContextType = {
     keyResultList: KeyResultState[];
+    setKeyResultList: (keyResultList: KeyResultState[]) => void;
     selectedKeyResult: KeyResultState | null;
     setSelectedKeyResult: React.Dispatch<
         React.SetStateAction<KeyResultState | null>
@@ -10,17 +11,16 @@ type KeyResultContextType = {
     addKeyResult: (keyResult: KeyResultState) => void;
     removeKeyResult: (keyResultId: string, mode: string) => void;
     editKeyResult: (keyResult: KeyResultState) => void;
-    setKeyResultList: (keyResultList: KeyResultState[]) => void;
 };
 
 export const KeyResultContext = createContext<KeyResultContextType>({
     keyResultList: [],
+    setKeyResultList: () => {},
     selectedKeyResult: null,
     setSelectedKeyResult: () => {},
     editKeyResult: () => {},
     addKeyResult: () => {},
     removeKeyResult: () => {},
-    setKeyResultList: () => {},
 });
 
 type KeyResultProviderProps = {

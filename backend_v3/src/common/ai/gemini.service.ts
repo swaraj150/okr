@@ -13,7 +13,7 @@ export class GeminiService {
 
     async createEmbedding(text: string) {
         const result = await this.genAI.models.embedContent({
-            model: 'text-embedding-004',
+            model: 'gemini-embedding-001',
             contents: text
         });
 

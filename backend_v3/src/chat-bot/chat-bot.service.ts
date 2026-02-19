@@ -1,73 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenAI } from '@google/genai';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { ObjectiveService } from 'src/objective/objective.service';
 import { GeminiService } from 'src/common/ai/gemini.service';
+import { PrismaService } from 'src/prisma.service';
+import { chatBotPrompt } from 'src/common/ai/system-prompts';
 
 @Injectable()
 export class ChatBotService {
-  constructor(private readonly geminiService: GeminiService) {}
+  constructor(private readonly geminiService: GeminiService, private readonly prismaService: PrismaService) { }
 
   async generate(dto: CreateChatDto) {
-    const data = []
-    const promptData = this.convert(data);
+    const userQuery = dto.chats[dto.chats.length - 1].content;
 
-    const systemPrompt = `
-    You are an OKR chatbot inside an OKR app.
+    const userQueryEmbedding = await this.geminiService.createEmbedding(userQuery);
 
-    You will receive:
+    const vectorString = `[${userQueryEmbedding!.join(',')}]`;
+    const results: { objectiveId: string, distance: number }[] = await this.prismaService.$queryRawUnsafe(
+      `
+      SELECT "objectiveId",
+            embedding <=> $1::vector AS distance
+      FROM "OkrEmbedding" 
+      WHERE embedding <=> $1::vector < 0.5
+      ORDER BY distance
+      LIMIT 5
+      `,
+      vectorString
+    );
+    console.log(results);
 
-    - A chat history as an array of { role, content } objects.
+    const retrievedOkrs = await this.prismaService.objective.findMany({
+      where: {
+        id: {
+          in: results.map(r => r.objectiveId),
+        },
+      },
+      include:{
+        keyResults:true
+      }
+    });
 
-    - OKR data in JSON-like format, for example:
-
-    {
-
-      "objective": {"title":"Improve retention","progress":100},
-
-      "keyResults": [
-
-        { "description": "Reduce churn", "progress": 10, "target": 20, "metric": "%" }
-
-      ]
-
-    }
-  
-    Your job:
-
-    - Use the latest user message as the primary request.
-
-    - Use any provided OKR data as context.
-
-    - Respond with a short, helpful answer about OKRs, progress, or next steps.
-    
-    Output format:
-
-    - Return plain text only.
-
-    - Use bullet points with "- " prefix.
-
-    - No JSON, no code blocks, no markdown headings.
-
-    - Keep it concise (3–7 bullets), unless the user asks for more detail.
-
-    - Generate response so that it looks good in chats
-    
-    Behavior rules:
-
-    - If the user asks to create or update OKRs, describe the proposed objective and key results in bullets (not JSON).
-
-    - If the user asks for analysis, summarize progress and highlight gaps in bullets.
-
-    - If the user asks a general question, answer briefly and offer a next step related to OKRs.
+      
 
 
-  
-      Do not:
 
-      - Return JSON.l̥
 
-      - Repeat the full OKR input unless asked.`;
+   
+    const systemPrompt=chatBotPrompt;
     const contents = [
       ...dto.chats.map(chat => ({
         role: chat.role.toLowerCase() === "ai" ? "model" : "user",
@@ -81,14 +58,14 @@ export class ChatBotService {
             text: `
             Here are my OKRs in JSON format:
 
-            ${JSON.stringify(promptData, null, 2)}
+            ${JSON.stringify(this.convert(retrievedOkrs), null, 2)}
 
             Please calculate the overall progress and return a structured response.`
           }
         ]
       }
     ];
-    const response = await this.geminiService.generate(contents, systemPrompt);
+    return this.geminiService.generate(contents, systemPrompt);
   }
 
 

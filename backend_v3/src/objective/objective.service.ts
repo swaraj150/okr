@@ -60,9 +60,9 @@ export class ObjectiveService {
         keyResults: true,
       },
     });
-    const text=JSON.stringify(res);
-    const embedding=await this.geminiService.createEmbedding(text);
-    
+
+    await this.createEmbedding(JSON.stringify(res),{objectiveId:res.id});
+    return res;  
   }
 
   update(updateObjectiveDto: UpdateObjectiveDto) {
@@ -99,7 +99,9 @@ export class ObjectiveService {
     const response = await this.okrGeneratorService.generate(prompt);
     console.log(response);
     const parsed: CreateObjectiveDto = JSON.parse(response);
-    return this.create(parsed);
+    // response validation
+
+    
   }
 
   private checkIsCompleted(keyResults: any) {
@@ -117,4 +119,17 @@ export class ObjectiveService {
       isCompleted: progress === 100,
     };
   }
+  async createEmbedding(okrText:string,metaData:{objectiveId:string}){
+    const embedding=await this.geminiService.createEmbedding(okrText);
+    await this.prismaService.$executeRaw`
+      INSERT INTO "OkrEmbedding" ("id", "objectiveId", "embedding")
+      VALUES (
+        gen_random_uuid(),
+        ${metaData.objectiveId},
+        ${`[${embedding!.join(',')}]`}::vector
+      )
+    `;
+  }
+
+  
 }

@@ -55,21 +55,34 @@ export class GeminiService {
       },
     });
 
-    // Check for function calls in the response
     if (response.functionCalls && response.functionCalls.length > 0) {
-      const functionCall: FunctionCall = response.functionCalls[0]; // Assuming one function call
-
-      tools
+      const functionCall: FunctionCall = response.functionCalls[0];
+      const toolResponse = await tools
         ?.find((tool) => tool.toolDef.name === functionCall.name)
         ?.execute(functionCall.args);
-
+      console.log('Tool Response', toolResponse);
       console.log(`Function to call: ${functionCall.name}`);
       console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-      // In a real app, you would call your actual function here:
-      // const result = await getCurrentTemperature(functionCall.args);
-    } else {
-      console.log('No function call found in the response.');
-      console.log(response.text);
+      const functionResponsePart = {
+        name: functionCall.name,
+        response: toolResponse,
+      };
+      const toolResponseMessage = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: functionResponsePart,
+          },
+        ],
+      };
+      console.log(response.candidates?.[0].content);
+      const updatedChatHistory = [...userPrompt, toolResponseMessage];
+      return await this.generate(
+        updatedChatHistory,
+        systemPrompt,
+        undefined,
+        tools,
+      );
     }
 
     return response.text;

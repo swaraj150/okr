@@ -99,7 +99,7 @@ export class ObjectiveService {
     const response = await this.okrGeneratorService.generate(prompt);
     console.log(response);
     const parsed: CreateObjectiveDto = JSON.parse(response);
-    await this.create(parsed);
+    return await this.create(parsed);
   }
 
   private checkIsCompleted(keyResults: any) {

@@ -18,60 +18,51 @@ export const ObjectiveSchema = z.object({
 });
 
 export class OkrGeneratorService {
-  
-  constructor(private geminiService:GeminiService) {
-    this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  }
+
+  constructor(private readonly geminiService: GeminiService) { }
   async generate(prompt: string) {
     console.log(`invoking okr generate method with prompt`, prompt);
     const systemPrompt = okrGeneratorPrompt;
-    const response = await this.ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0,
-        responseMimeType: 'application/json',
-        responseJsonSchema: {
-          type: 'OBJECT',
-          required: ['title', 'keyResults'],
-          properties: {
-            title: {
-              type: 'STRING',
-            },
-            keyResults: {
-              type: 'ARRAY',
-              minItems: 2,
-              maxItems: 5,
-              items: {
-                type: 'OBJECT',
-                required: [
-                  'description',
-                  'currentValue',
-                  'targetValue',
-                  'metricType',
-                ],
-                properties: {
-                  description: {
-                    type: 'STRING',
-                  },
-                  currentValue: {
-                    type: 'INTEGER',
-                  },
-                  targetValue: {
-                    type: 'INTEGER',
-                  },
-                  metricType: {
-                    type: 'STRING',
-                    enum: ['kg', 'INR', 'days', 'count', '%'],
-                  },
-                },
+    const schema = {
+      type: 'OBJECT',
+      required: ['title', 'keyResults'],
+      properties: {
+        title: {
+          type: 'STRING',
+        },
+        keyResults: {
+          type: 'ARRAY',
+          minItems: 2,
+          maxItems: 5,
+          items: {
+            type: 'OBJECT',
+            required: [
+              'description',
+              'currentValue',
+              'targetValue',
+              'metricType',
+            ],
+            properties: {
+              description: {
+                type: 'STRING',
+              },
+              currentValue: {
+                type: 'INTEGER',
+              },
+              targetValue: {
+                type: 'INTEGER',
+              },
+              metricType: {
+                type: 'STRING',
+                enum: ['kg', 'INR', 'days', 'count', '%'],
               },
             },
           },
         },
       },
-    });
+    };
+
+    const response = await this.geminiService.generate(prompt, systemPrompt, schema, undefined);
     return response.text;
   }
 }

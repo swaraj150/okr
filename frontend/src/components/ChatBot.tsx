@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessage {
   role: string;
@@ -42,21 +42,43 @@ const ChatBot = () => {
         })
       });
 
-      const result = await response.text();
+      // 🔥 Handle HTTP-level errors
+      if (!response.ok) {
+        throw new Error("Server error");
+      }
+
+      const text = await response.text();
+
+      // 🔥 Try parsing JSON safely
+      try {
+        const parsed = JSON.parse(text);
+
+        // If backend sent structured error
+        if (parsed.statusCode && parsed.message) {
+          setMessages(prev => [
+            ...prev,
+            { role: "AI", content: "⚠️ Something went wrong. Please try again." }
+          ]);
+          return;
+        }
+
+      } catch { }
 
       setMessages(prev => [
         ...prev,
-        { role: "AI", content: result }
+        { role: "AI", content: text }
       ]);
+
     } catch (error) {
       setMessages(prev => [
         ...prev,
-        { role: "AI", content: "Something went wrong." }
+        { role: "AI", content: "Something went wrong" }
       ]);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -66,31 +88,27 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-[500px] rounded-xl shadow-md bg-white">
-      
-   
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${
-              msg.role === "USER" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.role === "USER" ? "justify-end" : "justify-start"
+              }`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-[70%] text-sm ${
-                msg.role === "USER"
+              className={`px-4 py-2 rounded-lg max-w-[70%] text-sm ${msg.role === "USER"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-gray-800"
-              }`}
+                }`}
             >
-              {msg.content}
+              <ReactMarkdown>{msg.content}</ReactMarkdown>
             </div>
           </div>
         ))}
 
         {loading && (
-          <div className="text-gray-400 text-sm">Typing...</div>
+          <div className="text-gray-400 text-sm">Generating...</div>
         )}
 
         <div ref={bottomRef} />

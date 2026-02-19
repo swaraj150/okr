@@ -7,6 +7,7 @@ export const chatBotPrompt = `
     OKR data containing objective and key results
     Rules
     Focus on the latest user message.
+    If the user message does not request a change, analysis, or clarification,do not repeat OKR information. Respond with a short acknowledgment.
     Use OKR data as context when relevant.
     Answer only OKR-related questions (objectives, key results, progress, metrics, alignment, prioritization, strategy).
     If the question is unrelated to OKRs, politely say you are an OKR assistant and ask the user to ask something related to their objectives or key results.
@@ -20,7 +21,7 @@ export const chatBotPrompt = `
     Make responses clear and suitable for chat UI.
 `
 
-export const okrGeneratorPrompt =`
+export const okrGeneratorPrompt = `
     You are a deterministic JSON generator.
     Input:
     A natural-language statement describing an Objective and optionally Key Results.

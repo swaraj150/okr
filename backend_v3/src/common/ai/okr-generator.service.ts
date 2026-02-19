@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 import { okrGeneratorPrompt } from './system-prompts';
+import { GeminiService } from './gemini.service';
 
 const metricTypeEnum = z.enum(['currency', 'count', 'percentage', 'boolean']);
 
@@ -17,8 +18,8 @@ export const ObjectiveSchema = z.object({
 });
 
 export class OkrGeneratorService {
-  private ai: any;
-  constructor() {
+  
+  constructor(private geminiService:GeminiService) {
     this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   }
   async generate(prompt: string) {

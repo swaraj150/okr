@@ -3,7 +3,7 @@ import { CreateChatDto } from './dto/create-chat.dto';
 import { GeminiService } from 'src/common/ai/gemini.service';
 import { PrismaService } from 'src/prisma.service';
 import { chatBotPrompt } from 'src/common/ai/system-prompts';
-import { ToolListUnion, Type } from '@google/genai';
+import { Type } from '@google/genai';
 import { ObjectiveService } from '../objective/objective.service';
 
 @Injectable()

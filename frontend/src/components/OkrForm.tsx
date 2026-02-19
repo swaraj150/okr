@@ -8,10 +8,12 @@ export default function OkrForm({
     setFetchOkr,
     mode,
     selectedOkr,
+    setIsModalOpen
 }: {
     setFetchOkr: React.Dispatch<React.SetStateAction<boolean>>;
     mode: string;
     selectedOkr: ObjectiveState | null;
+    setIsModalOpen:React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const [objective, setObjective] = useState<string>('');
 
@@ -49,10 +51,11 @@ export default function OkrForm({
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(okr),
-            })
-                .then(() => {
+            }).then(() => {
                     setFetchOkr(true);
                     alert('Okr added');
+                    setIsModalOpen(false);
+
                 })
                 .catch(() => {
                     alert('Oops! Something went wrong!');
@@ -89,6 +92,8 @@ export default function OkrForm({
                         .then(() => {
                             setFetchOkr(true);
                             alert('Okr edited successfully');
+                            setIsModalOpen(false);
+
                         })
                         .catch(() => {
                             alert('Oops! Something went wrong!');
@@ -97,7 +102,11 @@ export default function OkrForm({
                 .catch(() => {
                     alert('Oops! Something went wrong!');
                 });
-        } else return;
+        }
+
+
+
+        
     };
 
     return (

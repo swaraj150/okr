@@ -56,7 +56,7 @@ export const ObjectiveMenu = ({
                             hover:bg-gray-100
                         "
                     >
-                        Add key result
+                        Add a key result
                     </button>
 
                     <button

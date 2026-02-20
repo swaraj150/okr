@@ -2,15 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/objective.dto';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Injector } from '@nestjs/core/injector/injector';
-import { OkrGeneratorService } from '../common/ai/okr-generator.service';
-import { GeminiService } from 'src/common/ai/gemini.service';
+import { GeminiService } from '../common/ai/gemini.service';
+import { okrGeneratorPrompt } from 'src/common/ai/system-prompts';
 
 @Injectable()
 export class ObjectiveService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly okrGeneratorService: OkrGeneratorService,
     private readonly geminiService: GeminiService,
   ) {}
 
@@ -65,10 +63,10 @@ export class ObjectiveService {
     return res;
   }
 
-  update(updateObjectiveDto: UpdateObjectiveDto) {
+  update(updateObjectiveDto: UpdateObjectiveDto, id: string) {
     return this.prismaService.objective.update({
       where: {
-        id: updateObjectiveDto.id,
+        id: id,
       },
       data: {
         title: updateObjectiveDto.title,
@@ -83,7 +81,7 @@ export class ObjectiveService {
       throw new NotFoundException('Objective not found.');
     }
     const completeness = this.checkIsCompleted(objective.keyResults);
-    console.log(completeness);
+
     await this.prismaService.objective.update({
       where: {
         id: payload.objectiveId,
@@ -96,7 +94,7 @@ export class ObjectiveService {
   }
 
   async generate(prompt: string) {
-    const response = await this.okrGeneratorService.generate(prompt);
+    const response = await this.generateOkr(prompt);
     console.log(response);
     const parsed: CreateObjectiveDto = JSON.parse(response);
     return await this.create(parsed);
@@ -104,14 +102,10 @@ export class ObjectiveService {
 
   private checkIsCompleted(keyResults: any) {
     let sum = 0;
-
     for (const keyResult of keyResults) {
-      console.log(`${keyResult.currentValue} and ${keyResult.targetValue}`);
       sum = sum + (keyResult.currentValue / keyResult.targetValue) * 100;
     }
-    console.log(sum);
     const progress = keyResults.length === 0 ? 100 : sum / keyResults.length;
-    console.log(sum / keyResults.length);
     return {
       progress: progress,
       isCompleted: progress === 100,
@@ -127,5 +121,54 @@ export class ObjectiveService {
         ${`[${embedding!.join(',')}]`}::vector
       )
     `;
+  }
+
+  async generateOkr(prompt: string) {
+    const systemPrompt = okrGeneratorPrompt;
+    const schema = {
+      type: 'OBJECT',
+      required: ['title', 'keyResults'],
+      properties: {
+        title: {
+          type: 'STRING',
+        },
+        keyResults: {
+          type: 'ARRAY',
+          minItems: 2,
+          maxItems: 5,
+          items: {
+            type: 'OBJECT',
+            required: [
+              'description',
+              'currentValue',
+              'targetValue',
+              'metricType',
+            ],
+            properties: {
+              description: {
+                type: 'STRING',
+              },
+              currentValue: {
+                type: 'INTEGER',
+              },
+              targetValue: {
+                type: 'INTEGER',
+              },
+              metricType: {
+                type: 'STRING',
+                enum: ['kg', 'INR', 'days', 'count', '%'],
+              },
+            },
+          },
+        },
+      },
+    };
+
+    return await this.geminiService.generate(
+      prompt,
+      systemPrompt,
+      schema,
+      undefined,
+    );
   }
 }

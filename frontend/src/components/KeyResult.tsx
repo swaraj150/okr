@@ -110,6 +110,9 @@ export const KeyResult = ({
                     <input
                         type="number"
                         value={currentValue}
+                        min={0}
+                        max={keyResult.targetValue}
+
                         onChange={(e) =>
                             setCurrentValue(Number(e.target.value))
                         }

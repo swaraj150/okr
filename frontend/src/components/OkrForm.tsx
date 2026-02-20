@@ -8,15 +8,17 @@ export default function OkrForm({
     setFetchOkr,
     mode,
     selectedOkr,
+    setIsModalOpen
 }: {
     setFetchOkr: React.Dispatch<React.SetStateAction<boolean>>;
     mode: string;
     selectedOkr: ObjectiveState | null;
+    setIsModalOpen:React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const [objective, setObjective] = useState<string>('');
 
     const { keyResultList, setKeyResultList } = useContext(KeyResultContext);
-    const BASE_URL: string = import.meta.env.VITE_OBJECTIVE_BASE_URL;
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     useEffect(() => {
         if (selectedOkr != null) {
             setObjective(selectedOkr.title);
@@ -43,16 +45,17 @@ export default function OkrForm({
                 progress: '0',
                 keyResults: keyResultList,
             };
-            fetch(BASE_URL, {
+            fetch(`${BASE_URL}/objective`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(okr),
-            })
-                .then(() => {
+            }).then(() => {
                     setFetchOkr(true);
                     alert('Okr added');
+                    setIsModalOpen(false);
+
                 })
                 .catch(() => {
                     alert('Oops! Something went wrong!');
@@ -65,18 +68,17 @@ export default function OkrForm({
                 })
                 .map((kr) => kr.id);
 
-            fetch(BASE_URL, {
+            fetch(`${BASE_URL}/objective/${selectedOkr.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: selectedOkr.id,
                     title: objective.toString(),
                 }),
             })
                 .then(() => {
-                    fetch(import.meta.env.VITE_KEYRESULT_BASE_URL, {
+                    fetch(`${BASE_URL}/objective/${selectedOkr.id}/key-result/`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -89,6 +91,8 @@ export default function OkrForm({
                         .then(() => {
                             setFetchOkr(true);
                             alert('Okr edited successfully');
+                            setIsModalOpen(false);
+
                         })
                         .catch(() => {
                             alert('Oops! Something went wrong!');
@@ -97,7 +101,11 @@ export default function OkrForm({
                 .catch(() => {
                     alert('Oops! Something went wrong!');
                 });
-        } else return;
+        }
+
+
+
+        
     };
 
     return (

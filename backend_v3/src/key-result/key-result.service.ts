@@ -8,6 +8,7 @@ import {
 } from './dto/key-result.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
+type OkrIdType={keyResultId:string;objectiveId:string}
 @Injectable()
 export class KeyResultService {
   constructor(
@@ -26,35 +27,35 @@ export class KeyResultService {
       },
     });
   }
-  getOneById(id: string) {
+  getOneById(okrIds:OkrIdType) {
     return this.prismaService.keyResult.findUnique({
       where: {
-        id: id,
+        id: okrIds.keyResultId,
       },
     });
   }
 
-  async update(dto: UpdateKeyResultDto) {
-    const { id, ...data } = dto;
+  async update(dto: UpdateKeyResultDto,okrIds:OkrIdType) {
+    const { ...data } = dto;
     await this.prismaService.keyResult.update({
-      where: { id },
+      where: { id:okrIds.keyResultId },
       data,
     });
     if (dto.currentValue) {
       this.eventEmitter.emit('update_completeness', {
-        objectiveId: dto.objectiveId,
+        objectiveId: okrIds.objectiveId,
       });
     }
   }
 
-  delete(id: string) {
-    return this.prismaService.keyResult.delete({ where: { id } });
+  delete(okrIds:OkrIdType) {
+    return this.prismaService.keyResult.delete({ where: { id:okrIds.keyResultId } });
   }
 
-  async updateCurrentValue(updateCurrentValueDto: UpdateCurrentValueDto) {
+  async updateCurrentValue(updateCurrentValueDto: UpdateCurrentValueDto,okrIds:OkrIdType) {
     await this.prismaService.keyResult.update({
       where: {
-        id: updateCurrentValueDto.id,
+        id: okrIds.keyResultId,
       },
       data: {
         currentValue: updateCurrentValueDto.currentValue,
@@ -62,17 +63,17 @@ export class KeyResultService {
     });
 
     await this.eventEmitter.emitAsync('update_completeness', {
-      objectiveId: updateCurrentValueDto.objectiveId,
+      objectiveId: okrIds.objectiveId,
     });
   }
 
-  deleteAll(deleteKeyResultsDto: DeleteKeyResultsDto) {
+  deleteAll(deleteKeyResultsDto: DeleteKeyResultsDto,okrIds:OkrIdType) {
     return this.prismaService.keyResult.deleteMany({
       where: {
         id: {
           in: deleteKeyResultsDto.keyResultsToDelete,
         },
-        objectiveId: deleteKeyResultsDto.objectiveId,
+        objectiveId: okrIds.objectiveId,
       },
     });
   }

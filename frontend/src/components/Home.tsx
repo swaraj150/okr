@@ -10,16 +10,16 @@ import ChatBot from './ChatBot.tsx';
 const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
-
     const [fetchOkr, setFetchOkr] = useState<boolean>(true);
     const [okrList, setOkrList] = useState([]);
     const [selectedOkr, setSelectedOkr] = useState<ObjectiveState | null>(null);
-    const BASE_URL: string = import.meta.env.VITE_OBJECTIVE_BASE_URL;
+    const BASE_URL: string = import.meta.env.VITE_BASE_URL;
     const [prompt, setPrompt] = useState<string>('');
+
     useEffect(() => {
         if (fetchOkr) {
             const fetchData = async () => {
-                const res = await fetch(`${BASE_URL}`);
+                const res = await fetch(`${BASE_URL}/objective`);
                 return await res.json();
             };
             fetchData().then((r) => setOkrList(r));
@@ -28,7 +28,7 @@ const Home = () => {
     }, [fetchOkr]);
 
     const onDelete = (id: string) => {
-        fetch(`${BASE_URL}/${id}`, {
+        fetch(`${BASE_URL}/objective/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,35 +37,72 @@ const Home = () => {
             setFetchOkr(true);
         });
     };
+    const handleGenerate = async () => {
+        await fetch(`${BASE_URL}/objective/generate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: prompt,
+            }),
+        }).then(()=>{
+            setFetchOkr(true);
+            setPrompt('');
+            
+        }).catch(()=>{
+            alert("failed to generate okr")
+        });
+
+    };
+
+
     return (
         <div className={'container relative font-mono bg-white'}>
-            <div className={'flex justify-between '}>
+            <div className={'flex justify-between'}>
                 <h1 className={' right-1/2 m-3 text-4xl z-20'}>Northstar</h1>
-                <div>
+                
+                <div className="flex items-center gap-2 pe-27">
                     <input
-                        type={'text'}
+                        type="text"
+                        placeholder="Describe your goal..."
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                    />
-                    <button
-                        onClick={async () => {
-                            await fetch(`${BASE_URL}/generate`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    prompt: prompt,
-                                }),
-                            }).then(() => {
-                                setFetchOkr(true);
-                                setPrompt('');
-                            });
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && prompt.trim()) {
+                                handleGenerate();
+                            }
                         }}
+                        className={`
+                            w-80
+                            px-3 py-2
+                            border border-gray-400
+                            text-sm
+                            focus:outline-none
+                            focus:border-blue-600
+                            transition
+                        `}
+                    />
+
+                    <button
+                        disabled={!prompt.trim()}
+                        onClick={handleGenerate}
+                        className={`
+                            px-4 py-2
+                            text-sm
+                            border
+                            transition
+                            ${prompt.trim()
+                                ? "bg-black text-white border-black hover:bg-gray-800"
+                                : "bg-gray-700 text-white border-gray-300 cursor-not-allowed"
+                            }
+                        `}
                     >
                         Generate
                     </button>
                 </div>
+
+
 
                 <button
                     className={
@@ -92,6 +129,7 @@ const Home = () => {
                         setFetchOkr={setFetchOkr}
                         mode={selectedOkr ? 'edit' : 'create'}
                         selectedOkr={selectedOkr}
+                        setIsModalOpen={setIsModalOpen}
                     />
                 </KeyResultProvider>
             </Modal>
@@ -111,7 +149,6 @@ const Home = () => {
                 }}
                 setFetchOkr={setFetchOkr}
             />
-            {/* Floating Chat Button */}
             <button
                 onClick={() => setIsChatOpen(true)}
                 className="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 transition z-50"
@@ -119,7 +156,6 @@ const Home = () => {
                 Chat
             </button>
 
-            {/* Overlay */}
             {isChatOpen && (
                 <div
                     className="fixed inset-0 bg-black/30 z-40"
@@ -127,7 +163,6 @@ const Home = () => {
                 />
             )}
 
-            {/* Chat Sidebar */}
             <div
                 className={`fixed top-0 right-0 h-full w-[400px] bg-white shadow-xl z-50 transform transition-transform duration-300 ${isChatOpen ? "translate-x-0" : "translate-x-full"
                     }`}

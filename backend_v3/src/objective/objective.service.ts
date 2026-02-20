@@ -11,7 +11,7 @@ export class ObjectiveService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly okrGeneratorService: OkrGeneratorService,
-    private readonly geminiService:GeminiService
+    private readonly geminiService: GeminiService,
   ) {}
 
   getAll() {
@@ -42,7 +42,7 @@ export class ObjectiveService {
     return this.prismaService.objective.delete({ where: { id } });
   }
   async create(createObjectiveDto: CreateObjectiveDto) {
-    const res=await this.prismaService.objective.create({
+    const res = await this.prismaService.objective.create({
       data: {
         title: createObjectiveDto.title,
         isCompleted: createObjectiveDto.keyResults.length === 0,
@@ -61,8 +61,8 @@ export class ObjectiveService {
       },
     });
 
-    await this.createEmbedding(JSON.stringify(res),{objectiveId:res.id});
-    return res;  
+    await this.createEmbedding(JSON.stringify(res), { objectiveId: res.id });
+    return res;
   }
 
   update(updateObjectiveDto: UpdateObjectiveDto) {
@@ -99,9 +99,7 @@ export class ObjectiveService {
     const response = await this.okrGeneratorService.generate(prompt);
     console.log(response);
     const parsed: CreateObjectiveDto = JSON.parse(response);
-    // response validation
-
-    
+    return await this.create(parsed);
   }
 
   private checkIsCompleted(keyResults: any) {
@@ -119,8 +117,8 @@ export class ObjectiveService {
       isCompleted: progress === 100,
     };
   }
-  async createEmbedding(okrText:string,metaData:{objectiveId:string}){
-    const embedding=await this.geminiService.createEmbedding(okrText);
+  async createEmbedding(okrText: string, metaData: { objectiveId: string }) {
+    const embedding = await this.geminiService.createEmbedding(okrText);
     await this.prismaService.$executeRaw`
       INSERT INTO "OkrEmbedding" ("id", "objectiveId", "embedding")
       VALUES (
@@ -130,6 +128,4 @@ export class ObjectiveService {
       )
     `;
   }
-
-  
 }

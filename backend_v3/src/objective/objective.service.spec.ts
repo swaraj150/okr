@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ObjectiveService } from './objective.service';
 import { PrismaService } from '../prisma.service';
-import { OkrGeneratorService } from '../common/ai/okr-generator.service';
 import { GeminiService } from '../common/ai/gemini.service';
 import { NotFoundException } from '@nestjs/common';
 describe('ObjectiveService', () => {
@@ -31,7 +30,6 @@ describe('ObjectiveService', () => {
       providers: [
         ObjectiveService,
         { provide: PrismaService, useValue: mockPrismaService },
-        { provide: OkrGeneratorService, useValue: mockOkrGeneratorService },
         { provide: GeminiService, useValue: mockGeminiService },
       ],
     }).compile();
@@ -188,7 +186,7 @@ describe('ObjectiveService', () => {
       const updated = buildObjective([], { title: dto.title });
       mockPrismaService.objective.update.mockResolvedValue(updated);
 
-      const result = await objectiveService.update(dto);
+      const result = await objectiveService.update(dto, '1');
 
       expect(result).toEqual(updated);
       expect(mockPrismaService.objective.update).toHaveBeenCalledWith({
